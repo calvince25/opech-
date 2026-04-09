@@ -188,19 +188,17 @@ export default function Admin() {
 
       if (editingProduct) {
         const { error } = await supabase.from('products').update(submissionData).eq('id', editingProduct.id);
-        if (!error) {
-          setShowProductModal(false);
-          fetchData();
-        }
+        if (error) throw error;
+        setShowProductModal(false);
+        fetchData();
       } else {
         const { error } = await supabase.from('products').insert(submissionData);
-        if (!error) {
-          setShowProductModal(false);
-          fetchData();
-        }
+        if (error) throw error;
+        setShowProductModal(false);
+        fetchData();
       }
     } catch (err: any) {
-      alert(`Error saving product: ${err.message}`);
+      alert(`Error saving product: ${err.message || 'Unknown error'}`);
     } finally {
       setActionLoading(null);
       setUploadLoading(false);
@@ -266,8 +264,19 @@ export default function Admin() {
     setActionLoading(null);
   };
 
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: string) => {
+    setActionLoading(orderId);
+    const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
+    if (error) {
+      alert(`Error updating order: ${error.message}\nIf this is a constraint error, please ensure '${newStatus}' is added to the status check constraint in your Supabase database.`);
+    } else {
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+    }
+    setActionLoading(null);
+  };
+
   const stats = [
-    { label: 'Total Sales', value: `KES ${orders.filter(o => o.status === 'paid').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50', tab: 'dashboard' },
+    { label: 'Total Sales', value: `KES ${orders.filter(o => o.status === 'paid' || o.status === 'completed').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50', tab: 'dashboard' },
     { label: 'Orders', value: orders.length.toString(), icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50', tab: 'dashboard' },
     { label: 'Products', value: products.length.toString(), icon: Package, color: 'text-purple-600', bg: 'bg-purple-50', tab: 'products' },
     { label: 'Customers', value: profiles.length.toString(), icon: Users, color: 'text-orange-600', bg: 'bg-orange-50', tab: 'customers' },
@@ -393,6 +402,7 @@ export default function Admin() {
                         <td className="px-6 py-4">
                           <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                             order.status === 'paid' ? 'bg-green-100 text-green-700' :
+                            order.status === 'completed' ? 'bg-blue-100 text-blue-700' :
                             order.status === 'pending' ? 'bg-amber-100 text-amber-700' :
                             'bg-red-100 text-red-700'
                           }`}>
@@ -400,9 +410,21 @@ export default function Admin() {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <button className="text-stone-400 hover:text-stone-600">
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            {order.status !== 'completed' && (
+                              <button 
+                                onClick={() => handleUpdateOrderStatus(order.id, 'completed')} 
+                                disabled={actionLoading === order.id}
+                                className="text-xs px-2 py-1 bg-stone-100 font-bold hover:bg-stone-200 text-stone-600 rounded whitespace-nowrap disabled:opacity-50"
+                              >
+                                {actionLoading === order.id ? <Loader2 className="w-3 h-3 animate-spin inline mr-1" /> : <Check className="w-3 h-3 inline mr-1" />}
+                                Mark Complete
+                              </button>
+                            )}
+                            <button className="text-stone-400 hover:text-stone-600">
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
