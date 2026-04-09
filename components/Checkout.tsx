@@ -43,7 +43,7 @@ const Checkout: React.FC<CheckoutProps> = ({ items, onBack }) => {
 
         if (orderError) throw orderError;
 
-        const res = await fetch('http://localhost:3001/api/mpesa/pay', {
+        const res = await fetch('/api/mpesa/pay', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone, amount: total, orderId: orderData.id })
