@@ -79,7 +79,7 @@ export default function Contact({ settings }: ContactProps) {
               </div>
               <div>
                 <h3 className="font-medium text-lg">Email Us</h3>
-                <p className="text-stone-600">{settings?.email || 'hello@melsfashion.com'}</p>
+                <p className="text-stone-600">{settings?.email || 'hello@mellsfasion.co.ke'}</p>
               </div>
             </div>
           </div>

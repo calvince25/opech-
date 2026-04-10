@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://melsfashion.com/sitemap.xml
+Sitemap: https://www.mellsfasion.co.ke/sitemap.xml

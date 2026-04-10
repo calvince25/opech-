@@ -83,7 +83,7 @@ const Footer: React.FC<FooterProps> = ({ onLinkClick, settings }) => {
       </div>
 
       <div className="max-w-[1800px] mx-auto mt-20 pt-8 border-t border-[#D6D1C7] flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-widest opacity-60">
-        <p>Created by @calvince | {settings?.email || 'hello@melsfashion.com'}</p>
+        <p>Created by @calvince | {settings?.email || 'hello@mellsfasion.co.ke'}</p>
         <p>designed by <a href="https://growthlab.co.ke" target="_blank" rel="noopener noreferrer" className="hover:text-[#2C2A26] transition-colors">GrowthLab</a></p>
       </div>
     </footer>

@@ -13,9 +13,9 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "Mel's Fashion",
-      "image": "https://melsfashion.com/logo.png",
-      "@id": "https://melsfashion.com",
-      "url": "https://melsfashion.com",
+      "image": "https://www.mellsfasion.co.ke/logo.png",
+      "@id": "https://www.mellsfasion.co.ke",
+      "url": "https://www.mellsfasion.co.ke",
       "telephone": data.phone || "+254",
       "address": {
         "@type": "PostalAddress",
@@ -62,7 +62,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       },
       "offers": {
         "@type": "Offer",
-        "url": `https://melsfashion.com/product/${data.id}`,
+        "url": `https://www.mellsfasion.co.ke/product/${data.id}`,
         "priceCurrency": "KES",
         "price": data.price,
         "availability": "https://schema.org/InStock",
@@ -75,7 +75,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
         "@type": "CollectionPage",
         "name": "Premium Handbags Kenya Collection | Mel's Fashion",
         "description": "Browse our exclusive collection of handcrafted premium handbags in Kenya. Artisanal clutches, totes and crossbody bags.",
-        "url": "https://melsfashion.com"
+        "url": "https://www.mellsfasion.co.ke"
     };
   }
 

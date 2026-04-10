@@ -225,7 +225,7 @@ function ProductDetailWrapper({ onAddToCart }: { onAddToCart: (p: Product) => vo
         title={`${product.name} | Premium Handbags Kenya`}
         description={product.description}
         image={product.image_url}
-        url={`https://melsfashion.com/product/${product.id}`}
+        url={`https://www.mellsfasion.co.ke/product/${product.id}`}
         type="product"
       />
       <StructuredData type="Product" data={product} />

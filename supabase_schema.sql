@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 CREATE TABLE IF NOT EXISTS site_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1), -- Ensure only one row
   phone TEXT DEFAULT '+254 700 000 000',
-  email TEXT DEFAULT 'hello@melsfashion.com',
+  email TEXT DEFAULT 'hello@mellsfasion.co.ke',
   address TEXT DEFAULT 'Kilimani, Nairobi, Kenya',
-  instagram_url TEXT DEFAULT 'https://instagram.com/melsfashion',
+  instagram_url TEXT DEFAULT 'https://instagram.com/mellsfasion',
   facebook_url TEXT,
   whatsapp_number TEXT DEFAULT '254700000000',
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
