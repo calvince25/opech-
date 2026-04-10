@@ -41,7 +41,7 @@ export default function Blog({ onArticleClick }: BlogProps) {
       <div className="relative h-[55vh] min-h-[420px] mb-20 overflow-hidden">
         <img
           src="/blog-hero.jpg"
-          alt="Premium Handbags Kenya - Mell Bags Blog"
+          alt="Premium Handbags Kenya - Mel's Fashion Blog"
           className="w-full h-full object-cover"
           loading="eager"
         />
@@ -92,7 +92,7 @@ export default function Blog({ onArticleClick }: BlogProps) {
                     </span>
                     <span className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      {post.author_name || 'Mell Bags'}
+                      {post.author_name || 'Mel\'s Fashion'}
                     </span>
                   </div>
                   <h3 className="text-2xl font-serif text-[#2C2A26] group-hover:opacity-70 transition-opacity">

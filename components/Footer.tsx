@@ -30,7 +30,7 @@ const Footer: React.FC<FooterProps> = ({ onLinkClick, settings }) => {
       <div className="max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
 
         <div className="md:col-span-4">
-          <h4 className="text-2xl font-serif text-[#2C2A26] mb-6">Mell Bags</h4>
+          <h4 className="text-2xl font-serif text-[#2C2A26] mb-6">Mel's Fashion</h4>
           <p className="max-w-xs font-light leading-relaxed">
             Handcrafted elegance from the heart of Nairobi.
             Quality leather, timeless design, urban chic.
@@ -83,7 +83,7 @@ const Footer: React.FC<FooterProps> = ({ onLinkClick, settings }) => {
       </div>
 
       <div className="max-w-[1800px] mx-auto mt-20 pt-8 border-t border-[#D6D1C7] flex flex-col md:flex-row justify-between items-center text-xs uppercase tracking-widest opacity-60">
-        <p>Created by @calvince | {settings?.email || 'hello@mellbags.co.ke'}</p>
+        <p>Created by @calvince | {settings?.email || 'hello@melsfashion.com'}</p>
         <p>designed by <a href="https://growthlab.co.ke" target="_blank" rel="noopener noreferrer" className="hover:text-[#2C2A26] transition-colors">GrowthLab</a></p>
       </div>
     </footer>

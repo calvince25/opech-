@@ -79,7 +79,7 @@ const Checkout: React.FC<CheckoutProps> = ({ items, onBack }) => {
           </div>
           <h1 className="text-4xl font-serif text-[#2C2A26]">Order Confirmed!</h1>
           <p className="text-[#5D5A53] font-light leading-relaxed">
-            Thank you for shopping with Mell Bags. We've received your order and will begin processing it immediately. You'll receive a confirmation email shortly.
+            Thank you for shopping with Mel's Fashion. We've received your order and will begin processing it immediately. You'll receive a confirmation email shortly.
           </p>
           <button 
             onClick={onBack}

@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
       <div className="relative z-10 h-full flex flex-col justify-center items-start text-left md:items-center md:text-center px-6">
         <div className="animate-fade-in-up w-full md:w-auto">
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-normal text-white tracking-tight mb-8 drop-shadow-sm">
-            Mell <span className="italic text-[#F5F2EB]">Bags.</span>
+            Mel's <span className="italic text-[#F5F2EB]">Fashion.</span>
           </h1>
           <p className="max-w-lg mx-0 md:mx-auto text-lg md:text-xl text-white/90 font-light leading-relaxed mb-12 text-shadow-sm">
             Experience the finest <span className="font-medium text-white italic">Premium Handbags Kenya</span> has to offer. 

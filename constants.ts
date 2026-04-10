@@ -108,16 +108,16 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
         image: "https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1000",
         content: React.createElement(React.Fragment, null,
             React.createElement("p", { className: "mb-6 first-letter:text-5xl first-letter:font-serif first-letter:mr-3 first-letter:float-left text-[#5D5A53]" },
-                "In the heart of Kenya, a tradition of craftsmanship is being reborn. At Mell Bags, we believe that the best materials are found right here at home. Our leather is sourced from local tanneries that prioritize sustainable practices and quality."
+                "In the heart of Kenya, a tradition of craftsmanship is being reborn. At Mel's Fashion, we believe that the best materials are found right here at home. Our leather is sourced from local tanneries that prioritize sustainable practices and quality."
             ),
             React.createElement("p", { className: "mb-8 text-[#5D5A53]" },
                 "Every hide tells a story. The subtle imperfections, the rich grain, and the way it softens over time are all marks of a natural product. Our artisans in Nairobi treat each piece with the respect it deserves, ensuring that every bag we produce is a masterpiece."
             ),
             React.createElement("blockquote", { className: "border-l-2 border-[#2C2A26] pl-6 italic text-xl text-[#2C2A26] my-10 font-serif" },
-                "\"Quality is not an act, it is a habit. At Mell Bags, it is our way of life.\""
+                "\"Quality is not an act, it is a habit. At Mel's Fashion, it is our way of life.\""
             ),
             React.createElement("p", { className: "mb-6 text-[#5D5A53]" },
-                "By choosing Mell Bags, you are not just buying a bag; you are supporting a community of skilled craftsmen and women who are dedicated to preserving the art of Kenyan leatherwork."
+                "By choosing Mel's Fashion, you are not just buying a bag; you are supporting a community of skilled craftsmen and women who are dedicated to preserving the art of Kenyan leatherwork."
             )
         )
     },
@@ -125,21 +125,21 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
         id: 2,
         title: "Nairobi Style Guide",
         date: "March 28, 2025",
-        excerpt: "How to style your Mell Bag for any occasion in the Green City in the Sun.",
+        excerpt: "How to style your Mel's Fashion for any occasion in the Green City in the Sun.",
         image: "https://images.unsplash.com/photo-1583209814683-c023dd293cc6?auto=format&fit=crop&q=80&w=1000",
         content: React.createElement(React.Fragment, null,
             React.createElement("p", { className: "mb-6 text-[#5D5A53]" },
                 "Nairobi is a city of contrasts, where modern skyscrapers meet lush greenery. This unique blend is reflected in the city's fashion scene, which is both cosmopolitan and deeply rooted in African heritage."
             ),
             React.createElement("p", { className: "mb-8 text-[#5D5A53]" },
-                "\"Nairobi style is all about versatility,\" says Mell, our founder. \"You need a bag that can take you from a morning meeting in Upper Hill to an afternoon coffee in Westlands, and finally to a sunset drink overlooking the National Park.\""
+                "\"Nairobi style is all about versatility,\" says Mel, our founder. \"You need a bag that can take you from a morning meeting in Upper Hill to an afternoon coffee in Westlands, and finally to a sunset drink overlooking the National Park.\""
             ),
             React.createElement("div", { className: "my-12 p-8 bg-[#EBE7DE] font-serif text-[#2C2A26] italic text-center" },
                 React.createElement("p", null, "The city hums"),
                 React.createElement("p", null, "With a rhythm all its own."),
                 React.createElement("p", null, "From the bustling CBD"),
                 React.createElement("p", null, "To the quiet of the suburbs."),
-                React.createElement("p", null, "Mell Bags fits"),
+                React.createElement("p", null, "Mel's Fashion fits"),
                 React.createElement("p", null, "Every beat of the heart.")
             ),
             React.createElement("p", { className: "mb-6 text-[#5D5A53]" },
@@ -155,7 +155,7 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
         image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1000",
         content: React.createElement(React.Fragment, null,
             React.createElement("p", { className: "mb-6 text-[#5D5A53]" },
-                "The global fashion industry is at a crossroads, and Kenya is leading the way in the slow fashion movement. At Mell Bags, sustainability is not just a buzzword; it's at the core of everything we do."
+                "The global fashion industry is at a crossroads, and Kenya is leading the way in the slow fashion movement. At Mel's Fashion, sustainability is not just a buzzword; it's at the core of everything we do."
             ),
             React.createElement("p", { className: "mb-8 text-[#5D5A53]" },
                 "We believe in creating products that last. By using high-quality materials and traditional techniques, we ensure that our bags are built to withstand the test of time, reducing the need for frequent replacements and minimizing waste."
@@ -169,6 +169,6 @@ export const JOURNAL_ARTICLES: JournalArticle[] = [
     }
 ];
 
-export const BRAND_NAME = 'Mell Bags';
+export const BRAND_NAME = 'Mel\'s Fashion';
 export const PRIMARY_COLOR = 'stone-900'; 
 export const ACCENT_COLOR = 'stone-500';

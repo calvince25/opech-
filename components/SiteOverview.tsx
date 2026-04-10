@@ -24,7 +24,7 @@ export default function SiteOverview() {
     },
     {
       title: 'Customer Love',
-      description: 'See what our global community has to say about their Mell Bags.',
+      description: 'See what our global community has to say about their Mel\'s Fashion.',
       icon: Star,
       link: '/reviews',
       cta: 'View Reviews'
@@ -48,7 +48,7 @@ export default function SiteOverview() {
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-serif text-[#2C2A26] mb-6"
           >
-            What's Happening at Mell Bags
+            What's Happening at Mel's Fashion
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

@@ -29,7 +29,7 @@ export default function BlogPostDetail({ post, onBack }: BlogPostProps) {
             </span>
             <span className="flex items-center gap-1">
               <User className="w-3 h-3" />
-              {post.author_name || 'Mell Bags'}
+              {post.author_name || 'Mel\'s Fashion'}
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif text-[#2C2A26] leading-tight mb-12">

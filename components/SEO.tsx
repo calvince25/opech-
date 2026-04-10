@@ -11,14 +11,14 @@ interface SEOProps {
 }
 
 export default function SEO({ 
-  title = 'Mell Bags - Premium Handbags Kenya | Handcrafted Elegance',
-  description = 'Mell Bags offers premium handbags in Kenya, handcrafted with artisanal excellence. Discover our collection of clutches, totes, and crossbody bags in Nairobi.',
-  keywords = 'premium handbags kenya, handcrafted bags nairobi, luxury bags kenya, artisanal leather bags nairobi, mell bags',
-  image = 'https://mellbags.com/og-image.jpg', // Replace with actual logo/hero image URL
-  url = 'https://mellbags.com',
+  title = 'Mel\'s Fashion - Premium Handbags Kenya | Handcrafted Elegance',
+  description = 'Mel\'s Fashion offers premium handbags in Kenya, handcrafted with artisanal excellence. Discover our collection of clutches, totes, and crossbody bags in Nairobi.',
+  keywords = 'premium handbags kenya, handcrafted bags nairobi, luxury bags kenya, artisanal leather bags nairobi, mel\'s fashion',
+  image = 'https://melsfashion.com/og-image.jpg', // Replace with actual logo/hero image URL
+  url = 'https://melsfashion.com',
   type = 'website'
 }: SEOProps) {
-  const siteTitle = title.includes('Mell Bags') ? title : `${title} | Mell Bags`;
+  const siteTitle = title.includes('Mel\'s Fashion') ? title : `${title} | Mel's Fashion`;
 
   return (
     <Helmet>

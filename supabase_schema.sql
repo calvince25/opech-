@@ -1,4 +1,4 @@
--- SQL Schema for Mell Bags Backend
+-- SQL Schema for Mel's Fashion Backend
 
 -- 1. Profiles Table (For Admin/Client Roles)
 CREATE TABLE IF NOT EXISTS profiles (
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   content TEXT,
   image_url TEXT,
   author_id UUID REFERENCES auth.users,
-  author_name TEXT DEFAULT 'Mell Bags',
+  author_name TEXT DEFAULT 'Mel''s Fashion',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS contact_messages (
 CREATE TABLE IF NOT EXISTS site_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1), -- Ensure only one row
   phone TEXT DEFAULT '+254 700 000 000',
-  email TEXT DEFAULT 'hello@mellbags.co.ke',
+  email TEXT DEFAULT 'hello@melsfashion.com',
   address TEXT DEFAULT 'Kilimani, Nairobi, Kenya',
-  instagram_url TEXT DEFAULT 'https://instagram.com/mellbags',
+  instagram_url TEXT DEFAULT 'https://instagram.com/melsfashion',
   facebook_url TEXT,
   whatsapp_number TEXT DEFAULT '254700000000',
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

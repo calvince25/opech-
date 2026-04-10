@@ -112,7 +112,7 @@ export default function Admin() {
         .insert({
           ...newPost,
           author_id: user.id,
-          author_name: 'Mell Bags Admin'
+          author_name: 'Mel\'s Fashion Admin'
         });
       
       if (!error) {
@@ -295,7 +295,7 @@ export default function Admin() {
       {/* WP Dark Sidebar */}
       <aside className="w-52 bg-[#1d2327] min-h-screen hidden md:flex flex-col fixed top-0 left-0 h-full z-40 pt-16">
         <div className="px-4 py-3 border-b border-white/10">
-          <p className="text-[11px] font-bold text-white/40 uppercase tracking-[0.15em]">Mell Bags</p>
+          <p className="text-[11px] font-bold text-white/40 uppercase tracking-[0.15em]">Mel's Fashion</p>
           <p className="text-xs text-white/60 font-medium">Admin Panel</p>
         </div>
         <nav className="flex-1 py-2">
@@ -667,7 +667,7 @@ export default function Admin() {
                             value={newPost.meta_title}
                             onChange={(e) => setNewPost({ ...newPost, meta_title: e.target.value })}
                             className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. Premium Leather Clutch Bags Nairobi | Mell Bags"
+                            placeholder="e.g. Premium Leather Clutch Bags Nairobi | Mel's Fashion"
                             maxLength={60}
                           />
                           <p className="text-[10px] text-stone-400 mt-1">Recommended: 50–60 characters. Current: {newPost.meta_title.length}</p>
@@ -681,7 +681,7 @@ export default function Admin() {
                             value={newPost.meta_description}
                             onChange={(e) => setNewPost({ ...newPost, meta_description: e.target.value })}
                             className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-blue-500 outline-none resize-none"
-                            placeholder="e.g. Discover handcrafted premium leather handbags in Nairobi, Kenya. Mell Bags offers luxury clutches, totes, and crossbody bags for the modern Kenyan woman."
+                            placeholder="e.g. Discover handcrafted premium leather handbags in Nairobi, Kenya. Mel's Fashion offers luxury clutches, totes, and crossbody bags for the modern Kenyan woman."
                             maxLength={160}
                           />
                           <p className="text-[10px] text-stone-400 mt-1">Recommended: 150–160 characters. Current: {newPost.meta_description.length}</p>
@@ -703,7 +703,7 @@ export default function Admin() {
                         </div>
                         <div className="flex items-center justify-between text-xs text-stone-500">
                           <span>Author:</span>
-                          <span className="font-bold">Mell Bags Admin</span>
+                          <span className="font-bold">Mel's Fashion Admin</span>
                         </div>
                         <div className="pt-2 flex gap-2">
                           <button type="button" onClick={() => setShowCreatePost(false)} className="flex-1 px-3 py-2 text-xs font-bold border border-stone-300 text-stone-600 rounded hover:bg-stone-50 transition-colors">

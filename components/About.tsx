@@ -19,18 +19,18 @@ const About: React.FC = () => {
         </div>
         <div className="md:w-2/3 max-w-2xl">
           <p className="text-lg md:text-xl text-[#5D5A53] font-light leading-relaxed mb-8">
-            Mell Bags was founded on a passion for Kenyan craftsmanship and a desire to create timeless accessories for the modern woman. Our journey began in a small workshop in Kilimani, where we first experimented with locally sourced leather and traditional beadwork.
+            Mel's Fashion was founded on a passion for Kenyan craftsmanship and a desire to create timeless accessories for the modern woman. Our journey began in a small workshop in Kilimani, where we first experimented with locally sourced leather and traditional beadwork.
           </p>
           <p className="text-lg md:text-xl text-[#5D5A53] font-light leading-relaxed mb-8">
             Today, we continue to honor those roots. Every bag is a labor of love, handcrafted by skilled artisans who take pride in their work. We use only the finest Kenyan leather, ensuring that each piece is as durable as it is beautiful.
           </p>
           <img 
             src="https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1260" 
-            alt="Mell Bags Workshop" 
+            alt="Mel's Fashion Workshop" 
             className="w-full h-[400px] object-cover grayscale contrast-[0.9] brightness-110 mt-12"
           />
           <p className="text-sm font-medium uppercase tracking-widest text-[#A8A29E] mt-4">
-            The Mell Workshop, Nairobi
+            The Mel's Fashion Workshop, Nairobi
           </p>
         </div>
       </div>

@@ -92,7 +92,7 @@ export default function Auth({ onSuccess }: AuthProps) {
             {isLogin ? 'Welcome Back.' : 'Create Account.'}
           </h2>
           <p className="text-white/70 text-sm">
-            {isLogin ? 'Sign in to access your Mell Bags dashboard' : 'Join our community of elegance'}
+            {isLogin ? 'Sign in to access your Mel\'s Fashion dashboard' : 'Join our community of elegance'}
           </p>
         </div>
 

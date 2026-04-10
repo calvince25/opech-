@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/genai": "^1.29.0",
     "@supabase/supabase-js": "^2.102.1",
+    "@vercel/analytics": "^2.0.1",
     "axios": "^1.15.0",
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",

@@ -12,10 +12,10 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
     schema = {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": "Mell Bags",
-      "image": "https://mellbags.com/logo.png",
-      "@id": "https://mellbags.com",
-      "url": "https://mellbags.com",
+      "name": "Mel's Fashion",
+      "image": "https://melsfashion.com/logo.png",
+      "@id": "https://melsfashion.com",
+      "url": "https://melsfashion.com",
       "telephone": data.phone || "+254",
       "address": {
         "@type": "PostalAddress",
@@ -58,11 +58,11 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       "description": data.description,
       "brand": {
         "@type": "Brand",
-        "name": "Mell Bags"
+        "name": "Mel's Fashion"
       },
       "offers": {
         "@type": "Offer",
-        "url": `https://mellbags.com/product/${data.id}`,
+        "url": `https://melsfashion.com/product/${data.id}`,
         "priceCurrency": "KES",
         "price": data.price,
         "availability": "https://schema.org/InStock",
@@ -73,9 +73,9 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        "name": "Premium Handbags Kenya Collection | Mell Bags",
+        "name": "Premium Handbags Kenya Collection | Mel's Fashion",
         "description": "Browse our exclusive collection of handcrafted premium handbags in Kenya. Artisanal clutches, totes and crossbody bags.",
-        "url": "https://mellbags.com"
+        "url": "https://melsfashion.com"
     };
   }
 

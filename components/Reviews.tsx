@@ -75,7 +75,7 @@ export default function Reviews({ fullPage = false }: ReviewsProps) {
         <div className="relative h-[50vh] min-h-[400px] mb-16 overflow-hidden">
           <img 
             src="/reviews-hero.jpg" 
-            alt="Handcrafted Premium Handbags Kenya - Mell Bags" 
+            alt="Handcrafted Premium Handbags Kenya - Mel's Fashion" 
             className="w-full h-full object-cover"
             loading="eager"
             fetchPriority="high"
@@ -184,7 +184,7 @@ export default function Reviews({ fullPage = false }: ReviewsProps) {
                         value={formData.comment}
                         onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
                         className="w-full px-6 py-4 bg-stone-50 border-none rounded-2xl focus:ring-2 focus:ring-stone-900 transition-all resize-none underline-none"
-                        placeholder="Tell us about your Mell Bag..."
+                        placeholder="Tell us about your Mel's Fashion..."
                       ></textarea>
                     </div>
 

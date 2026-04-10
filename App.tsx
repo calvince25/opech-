@@ -27,6 +27,7 @@ import BlogPostDetail from './components/BlogPost';
 import SEO from './components/SEO';
 import StructuredData from './components/StructuredData';
 import SiteOverview from './components/SiteOverview';
+import { Analytics } from '@vercel/analytics/react';
 import { Product, Profile, BlogPost as BlogPostType, SiteSettings } from './types';
 import { PRODUCTS, JOURNAL_ARTICLES } from './constants';
 
@@ -108,6 +109,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[#F5F2EB] font-sans text-[#2C2A26] selection:bg-[#D6D1C7] selection:text-[#2C2A26]">
       <SEO />
+      <Analytics />
       {siteSettings && <StructuredData type="LocalBusiness" data={siteSettings} />}
       
       {location.pathname !== '/checkout' && (
@@ -223,7 +225,7 @@ function ProductDetailWrapper({ onAddToCart }: { onAddToCart: (p: Product) => vo
         title={`${product.name} | Premium Handbags Kenya`}
         description={product.description}
         image={product.image_url}
-        url={`https://mellbags.com/product/${product.id}`}
+        url={`https://melsfashion.com/product/${product.id}`}
         type="product"
       />
       <StructuredData type="Product" data={product} />

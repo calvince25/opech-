@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mellbags.com/sitemap.xml
+Sitemap: https://melsfashion.com/sitemap.xml

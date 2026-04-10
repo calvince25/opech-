@@ -45,7 +45,7 @@ const Journal: React.FC<JournalProps> = ({ onArticleClick, fullPage = false }) =
         <div className="relative h-[55vh] min-h-[420px] mb-20 overflow-hidden">
           <img
             src="/blog-hero.jpg"
-            alt="Premium Handbags Kenya - Mell Bags Blog"
+            alt="Premium Handbags Kenya - Mel's Fashion Blog"
             className="w-full h-full object-cover"
             loading="eager"
           />
