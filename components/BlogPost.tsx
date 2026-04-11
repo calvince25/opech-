@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BlogPost } from '../types';
 import { motion } from 'motion/react';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
@@ -9,6 +9,10 @@ interface BlogPostProps {
 }
 
 export default function BlogPostDetail({ post, onBack }: BlogPostProps) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [post.id]);
+
   return (
     <div className="pt-24 min-h-screen bg-[#F5F2EB] animate-fade-in-up">
       <div className="max-w-4xl mx-auto px-6 md:px-12 pb-24">

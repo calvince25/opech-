@@ -132,7 +132,7 @@ function AppContent() {
               </div>
               <SiteOverview />
               <About />
-              <Journal onArticleClick={(a) => navigate(`/journal/${a.id}`)} />
+              <Journal onArticleClick={(a) => navigate(`/blog/${a.id}`)} />
             </>
           } />
 
