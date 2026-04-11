@@ -524,6 +524,7 @@ export default function Admin() {
                         <option value="Totes">Totes</option>
                         <option value="Shoulder bag">Shoulder bag</option>
                         <option value="Heels">Heels</option>
+                        <option value="Charms">Charms</option>
                         <option value="Clutches">Clutches</option>
                         <option value="Satchels">Satchels</option>
                         <option value="Crossbody">Crossbody</option>
