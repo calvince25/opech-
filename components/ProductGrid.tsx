@@ -5,7 +5,7 @@ import ProductCard from './ProductCard';
 import { supabase } from '../lib/supabase';
 import { Loader2 } from 'lucide-react';
 
-const categories = ['All', 'Clutches', 'Totes', 'Satchels', 'Crossbody'];
+const categories = ['All', 'Totes', 'Shoulder bag', 'Heels'];
 
 interface ProductGridProps {
   onProductClick: (product: Product) => void;

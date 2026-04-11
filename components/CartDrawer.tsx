@@ -60,7 +60,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, items, onRemov
             items.map((item, idx) => (
               <div key={`${item.id}-${idx}`} className="flex gap-4 animate-fade-in-up">
                 <div className="w-20 h-24 bg-[#EBE7DE] flex-shrink-0">
-                  <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                  <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div>

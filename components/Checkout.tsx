@@ -223,7 +223,7 @@ const Checkout: React.FC<CheckoutProps> = ({ items, onBack }) => {
                {items.map((item, idx) => (
                  <div key={idx} className="flex gap-4">
                     <div className="w-16 h-16 bg-[#EBE7DE] relative">
-                       <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                       <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#2C2A26] text-white text-[10px] flex items-center justify-center rounded-full">1</span>
                     </div>
                     <div className="flex-1">
@@ -242,7 +242,7 @@ const Checkout: React.FC<CheckoutProps> = ({ items, onBack }) => {
               </div>
               <div className="flex justify-between text-sm text-[#5D5A53]">
                  <span>Shipping</span>
-                 <span>Free</span>
+                 <span>(Not Inclusive)</span>
               </div>
             </div>
             

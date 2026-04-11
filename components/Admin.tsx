@@ -275,6 +275,30 @@ export default function Admin() {
     setActionLoading(null);
   };
 
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this order?')) return;
+    setActionLoading(orderId);
+    const { error } = await supabase.from('orders').delete().eq('id', orderId);
+    if (error) {
+      alert(`Error deleting order: ${error.message}`);
+    } else {
+      setOrders(orders.filter(o => o.id !== orderId));
+    }
+    setActionLoading(null);
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user profile? This will not delete their auth account.')) return;
+    setActionLoading(userId);
+    const { error } = await supabase.from('profiles').delete().eq('id', userId);
+    if (error) {
+      alert(`Error deleting profile: ${error.message}`);
+    } else {
+      setProfiles(profiles.filter(p => p.id !== userId));
+    }
+    setActionLoading(null);
+  };
+
   const stats = [
     { label: 'Total Sales', value: `KES ${orders.filter(o => o.status === 'paid' || o.status === 'completed').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50', tab: 'dashboard' },
     { label: 'Orders', value: orders.length.toString(), icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50', tab: 'dashboard' },
@@ -421,6 +445,14 @@ export default function Admin() {
                                 Mark Complete
                               </button>
                             )}
+                            <button 
+                              onClick={() => handleDeleteOrder(order.id)}
+                              disabled={actionLoading === order.id}
+                              className="text-red-400 hover:text-red-600 disabled:opacity-50"
+                              title="Delete Order"
+                            >
+                              {actionLoading === order.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                            </button>
                             <button className="text-stone-400 hover:text-stone-600">
                               <MoreVertical className="w-4 h-4" />
                             </button>
@@ -474,8 +506,11 @@ export default function Admin() {
                         onChange={(e) => setProductForm({ ...productForm, category: e.target.value as any })}
                         className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none"
                       >
-                        <option value="Clutches">Clutches</option>
                         <option value="Totes">Totes</option>
+                        <option value="Shoulder bag">Shoulder bag</option>
+                        <option value="Heels">Heels</option>
+                        <option value="Clutches">Clutches</option>
+                        <option value="Satchels">Satchels</option>
                         <option value="Crossbody">Crossbody</option>
                         <option value="Bucket">Bucket</option>
                         <option value="Weekender">Weekender</option>
@@ -944,6 +979,19 @@ export default function Admin() {
                           Demote
                         </button>
                       )}
+
+                      <button 
+                        onClick={() => handleDeleteUser(p.id)}
+                        disabled={actionLoading === p.id}
+                        className="flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 text-xs font-bold uppercase tracking-wider"
+                        title="Delete User"
+                      >
+                        {actionLoading === p.id 
+                          ? <Loader2 className="w-3 h-3 animate-spin" /> 
+                          : <Trash2 className="w-3 h-3" />
+                        }
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
