@@ -107,19 +107,34 @@ export default function Admin() {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
-      const { error } = await supabase
-        .from('blog_posts')
-        .insert({
-          ...newPost,
-          author_id: user.id,
-          author_name: 'Mel\'s Fashion Admin'
-        });
-      
-      if (!error) {
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .insert({
+            ...newPost,
+            author_id: user.id,
+            author_name: 'Mel\'s Fashion Admin'
+          });
+        
+        if (error) throw error;
+        
+        alert('Post published successfully!');
         setShowCreatePost(false);
-        setNewPost({ title: '', excerpt: '', content: '', image_url: '' });
+        setNewPost({ 
+          title: '', 
+          excerpt: '', 
+          content: '', 
+          image_url: '',
+          meta_title: '',
+          meta_description: ''
+        });
         fetchData();
+      } catch (err: any) {
+        alert('Failed to publish post: ' + (err.message || 'Unknown error'));
+        console.error('Publish error:', err);
       }
+    } else {
+      alert('You must be logged in as an admin to publish posts.');
     }
     setActionLoading(null);
   };
