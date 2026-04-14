@@ -41,23 +41,42 @@ export default function CheckoutPage() {
     }
     
     setLoading(true);
+    console.log('Initiating checkout for:', paymentMethod);
     
     try {
       // 1. Create Order in DB
-      // We do this first regardless of payment method to get an Order ID
-      const { data: orderData, error: orderError } = await supabase.from('orders').insert({
-        customer_id: user?.id,
+      // Note: We use { returning: 'minimal' } or just insert if we suspect RLS select issues
+      // But we need the ID, so we try inserting and getting it back
+      const orderPayload = {
+        customer_id: user?.id || null,
         phone_number: paymentMethod === 'mpesa' ? phone : shippingDetails.email,
         amount: total,
         items: cartItems,
         status: 'pending',
         shipping_address: shippingDetails
-      }).select().single();
+      };
 
-      if (orderError) throw orderError;
+      console.log('Inserting order...', orderPayload);
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert(orderPayload)
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Order Insertion Error:', orderError);
+        throw new Error(`Order registration failed: ${orderError.message}`);
+      }
+
+      if (!orderData) {
+        throw new Error('Order was created but no data was returned. Please check your connection.');
+      }
+
+      console.log('Order created successfully:', orderData.id);
 
       if (paymentMethod === 'mpesa') {
-        // 2. Trigger M-Pesa STK Push
+        process.env.NODE_ENV === 'development' && console.log('Triggering M-Pesa STK Push...');
+        
         const res = await fetch('/api/mpesa/pay', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -69,29 +88,35 @@ export default function CheckoutPage() {
         });
         
         const data = await res.json();
+        console.log('M-Pesa API Response:', data);
         
         if (data.success) {
-           // We show the success screen, but the order is "pending" in DB until callback
            setStep('success');
            clearCart();
         } else {
-           throw new Error(data.message || 'M-Pesa payment failed to initiate.');
+           throw new Error(data.message || 'M-Pesa payment failed to initiate. Please try again.');
         }
       } else {
         // Simulation for Card/Other
+        console.log('Simulating Card Payment...');
         await new Promise(r => setTimeout(r, 2000));
         
-        await supabase.from('orders').update({
-            status: 'paid',
-            notes: 'Paid via Card (Simulation)'
-        }).eq('id', orderData.id);
+        const { error: updateError } = await supabase
+          .from('orders')
+          .update({
+             status: 'paid',
+             notes: 'Paid via Card (Simulation)'
+          })
+          .eq('id', orderData.id);
+
+        if (updateError) console.error('Simulated update error:', updateError);
 
         setStep('success');
         clearCart();
       }
     } catch (err: any) {
-      console.error(err);
-      alert('Checkout failed: ' + err.message);
+      console.error('Checkout Error Detail:', err);
+      alert('Checkout encounterd an issue: ' + (err.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }

@@ -32,6 +32,11 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
 
+  // File Upload State
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   // Form States
   const [productForm, setProductForm] = useState({ name: '', price: 0, category: 'All', image_url: '', description: '', tagline: '' });
   const [blogForm, setBlogForm] = useState({ title: '', slug: '', excerpt: '', content: '', image_url: '', meta_title: '', meta_description: '' });
@@ -95,17 +100,50 @@ export default function AdminPage() {
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     setActionLoading('saving_product');
-    const { error } = editingProduct 
-      ? await supabase.from('products').update(productForm).eq('id', editingProduct.id)
-      : await supabase.from('products').insert([productForm]);
+    setUploading(true);
     
-    if (!error) {
-      setShowProductModal(false);
-      fetchData();
-    } else {
-      alert(error.message);
+    try {
+      let finalImageUrl = productForm.image_url;
+
+      // Handle File Upload if selected
+      if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+        const filePath = `product-images/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('products')
+          .upload(filePath, selectedFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('products')
+          .getPublicUrl(filePath);
+        
+        finalImageUrl = publicUrl;
+      }
+
+      const productData = { ...productForm, image_url: finalImageUrl };
+
+      const { error } = editingProduct 
+        ? await supabase.from('products').update(productData).eq('id', editingProduct.id)
+        : await supabase.from('products').insert([productData]);
+      
+      if (!error) {
+        setShowProductModal(false);
+        setSelectedFile(null);
+        setPreviewUrl(null);
+        fetchData();
+      } else {
+        throw error;
+      }
+    } catch (err: any) {
+      alert('Error: ' + err.message);
+    } finally {
+      setActionLoading(null);
+      setUploading(false);
     }
-    setActionLoading(null);
   };
 
   const handleSaveBlog = async (e: React.FormEvent) => {
@@ -173,6 +211,8 @@ export default function AdminPage() {
                 onClick={() => {
                   setEditingProduct(null);
                   setProductForm({ name: '', price: 0, category: 'All', image_url: '', description: '', tagline: '' });
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
                   setShowProductModal(true);
                 }}
                 className="px-6 py-2 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] shadow-sm transition-all"
@@ -705,8 +745,37 @@ export default function AdminPage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Image URL</label>
-                    <input required type="text" value={productForm.image_url} onChange={e => setProductForm({...productForm, image_url: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Product Image</label>
+                    <div className="flex items-center gap-6">
+                       <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-2xl h-32 hover:border-[#2271b1] cursor-pointer bg-stone-50 transition-all overflow-hidden group">
+                          {previewUrl || productForm.image_url ? (
+                             <img src={previewUrl || productForm.image_url} className="w-full h-full object-cover group-hover:opacity-50 transition-opacity" />
+                          ) : (
+                             <div className="flex flex-col items-center text-stone-400">
+                                <Plus className="w-6 h-6 mb-2" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">Select Photo</span>
+                             </div>
+                          )}
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={e => {
+                               const file = e.target.files?.[0];
+                               if (file) {
+                                  setSelectedFile(file);
+                                  setPreviewUrl(URL.createObjectURL(file));
+                               }
+                            }} 
+                          />
+                       </label>
+                       {(previewUrl || productForm.image_url) && (
+                         <div className="flex-1 space-y-2">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Direct Link fallback</p>
+                            <input type="text" value={productForm.image_url} onChange={e => setProductForm({...productForm, image_url: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-2 rounded text-xs outline-none focus:border-[#2271b1]" placeholder="Or paste URL..." />
+                         </div>
+                       )}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Description</label>

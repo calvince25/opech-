@@ -139,7 +139,7 @@ CREATE POLICY "Admins can manage site settings" ON site_settings FOR ALL USING (
 -- 7. Orders Table (For M-Pesa Integration)
 CREATE TABLE IF NOT EXISTS orders (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  customer_id UUID REFERENCES auth.users ON DELETE SET NULL,
+  customer_id UUID REFERENCES auth.users ON DELETE SET NULL, -- Allow NULL for guest checkout
   phone_number TEXT NOT NULL,
   amount NUMERIC NOT NULL,
   items JSONB NOT NULL,
@@ -155,6 +155,10 @@ CREATE TABLE IF NOT EXISTS orders (
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
 -- Orders: Anyone can insert (for guest checkout), Users can view their own, Admin can do all
+DROP POLICY IF EXISTS "Anyone can insert orders" ON orders;
+DROP POLICY IF EXISTS "Users can view their own orders" ON orders;
+DROP POLICY IF EXISTS "Admins can manage all orders" ON orders;
+
 CREATE POLICY "Anyone can insert orders" ON orders FOR INSERT WITH CHECK (true);
 CREATE POLICY "Users can view their own orders" ON orders FOR SELECT USING (auth.uid() = customer_id OR customer_id IS NULL);
 CREATE POLICY "Admins can manage all orders" ON orders FOR ALL USING (
