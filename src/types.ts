@@ -71,6 +71,7 @@ export interface BlogPost {
   author_id: string;
   created_at: string;
   author_name?: string;
+  slug?: string;
   meta_title?: string;
   meta_description?: string;
 }

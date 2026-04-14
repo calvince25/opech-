@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   image_url TEXT,
   author_id UUID REFERENCES auth.users,
   author_name TEXT DEFAULT 'Mel''s Fashion',
+  slug TEXT UNIQUE,
   meta_title TEXT,
   meta_description TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

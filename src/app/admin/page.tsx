@@ -26,6 +26,16 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
+  // CRUD States
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [showBlogModal, setShowBlogModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+
+  // Form States
+  const [productForm, setProductForm] = useState({ name: '', price: 0, category: 'All', image_url: '', description: '', tagline: '' });
+  const [blogForm, setBlogForm] = useState({ title: '', slug: '', excerpt: '', content: '', image_url: '', meta_title: '', meta_description: '' });
+
   useEffect(() => {
     if (!authLoading) {
       if (!user || !isAdmin) {
@@ -72,11 +82,51 @@ export default function AdminPage() {
   if (!isAdmin) return null;
 
   const stats = [
-    { label: 'Total Revenue', value: `KES ${orders.filter(o => o.status === 'paid' || o.status === 'completed').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'Orders', value: orders.length.toString(), icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Inventory', value: products.length.toString(), icon: Package, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Clients', value: profiles.length.toString(), icon: Users, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { id: 'orders', label: 'Total Revenue', value: `KES ${orders.filter(o => o.status === 'paid' || o.status === 'completed').reduce((acc, curr) => acc + Number(curr.amount), 0).toLocaleString()}`, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50' },
+    { id: 'orders', label: 'Orders', value: orders.length.toString(), icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { id: 'products', label: 'Inventory', value: products.length.toString(), icon: Package, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { id: 'customers', label: 'Clients', value: profiles.length.toString(), icon: Users, color: 'text-orange-600', bg: 'bg-orange-50' },
   ];
+
+  const handleStatClick = (tabId: string) => {
+    setActiveTab(tabId);
+  };
+
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setActionLoading('saving_product');
+    const { error } = editingProduct 
+      ? await supabase.from('products').update(productForm).eq('id', editingProduct.id)
+      : await supabase.from('products').insert([productForm]);
+    
+    if (!error) {
+      setShowProductModal(false);
+      fetchData();
+    } else {
+      alert(error.message);
+    }
+    setActionLoading(null);
+  };
+
+  const handleSaveBlog = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setActionLoading('saving_blog');
+    
+    const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    const data = { ...blogForm, slug, author_id: user.id };
+
+    const { error } = editingBlog
+      ? await supabase.from('blog_posts').update(data).eq('id', editingBlog.id)
+      : await supabase.from('blog_posts').insert([data]);
+    
+    if (!error) {
+      setShowBlogModal(false);
+      fetchData();
+    } else {
+      alert(error.message);
+    }
+    setActionLoading(null);
+  };
 
   return (
     <div className="pt-24 min-h-screen flex bg-[#f0f0f1]">
@@ -116,13 +166,31 @@ export default function AdminPage() {
       {/* Content */}
       <main className="flex-1 lg:ml-64 p-8 md:p-12">
         <header className="flex items-center justify-between mb-10">
-          <h1 className="text-3xl font-serif text-stone-900 capitalize">{activeTab}</h1>
+          <h1 className="text-3xl font-serif text-stone-900 capitalize font-bold tracking-tight">{activeTab}</h1>
           <div className="flex gap-4">
              {activeTab === 'products' && (
-               <button className="px-6 py-2 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] transition-all">+ Add Product</button>
+               <button 
+                onClick={() => {
+                  setEditingProduct(null);
+                  setProductForm({ name: '', price: 0, category: 'All', image_url: '', description: '', tagline: '' });
+                  setShowProductModal(true);
+                }}
+                className="px-6 py-2 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] shadow-sm transition-all"
+               >
+                 + Add Product
+               </button>
              )}
              {activeTab === 'blog' && (
-               <button className="px-6 py-2 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] transition-all">+ Write Post</button>
+               <button 
+                onClick={() => {
+                  setEditingBlog(null);
+                  setBlogForm({ title: '', slug: '', excerpt: '', content: '', image_url: '', meta_title: '', meta_description: '' });
+                  setShowBlogModal(true);
+                }}
+                className="px-6 py-2 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] shadow-sm transition-all"
+               >
+                 + Write Post
+               </button>
              )}
           </div>
         </header>
@@ -136,17 +204,21 @@ export default function AdminPage() {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-8"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4_gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => (
-                  <div key={stat.label} className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-4">
-                    <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl`}>
+                  <button 
+                    key={stat.label} 
+                    onClick={() => handleStatClick(stat.id)}
+                    className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex items-center gap-4 text-left hover:border-stone-400 hover:shadow-md transition-all group"
+                  >
+                    <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl group-hover:scale-110 transition-transform`}>
                       <stat.icon className="w-6 h-6" />
                     </div>
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">{stat.label}</p>
                       <p className="text-2xl font-bold text-stone-900">{stat.value}</p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
 
@@ -291,26 +363,22 @@ export default function AdminPage() {
                         </td>
                         <td className="px-10 py-8">
                            <div className="space-y-1">
-                              <p className="font-bold text-stone-900">{order.phone_number}</p>
+                              <p className="font-bold text-stone-900">{order.shipping_address?.firstName} {order.shipping_address?.lastName}</p>
+                              <p className="text-xs text-[#2271b1] font-mono">{order.phone_number}</p>
                               {order.shipping_address?.email && <p className="text-[10px] text-stone-400 lowercase">{order.shipping_address.email}</p>}
                            </div>
                         </td>
                         <td className="px-10 py-8">
-                           <div className="flex -space-x-3 overflow-hidden">
+                           <div className="space-y-2">
                               {order.items?.map((item: any, i: number) => (
-                                <div key={i} className="relative group/item z-0 hover:z-10">
-                                   <img 
-                                     src={item.image_url} 
-                                     className="w-10 h-10 rounded-full border-2 border-white object-cover shadow-sm bg-stone-100" 
-                                     title={item.name}
-                                   />
+                                <div key={i} className="flex items-center gap-3">
+                                   <img src={item.image_url} className="w-8 h-8 rounded border border-stone-100 object-cover" />
+                                   <div>
+                                      <p className="text-[11px] font-bold text-stone-900 leading-none">{item.name}</p>
+                                      <p className="text-[9px] text-stone-400 uppercase tracking-widest mt-1">QTY: 1</p>
+                                   </div>
                                 </div>
                               ))}
-                              {order.items?.length > 3 && (
-                                <div className="w-10 h-10 rounded-full border-2 border-white bg-stone-100 flex items-center justify-center text-[10px] font-bold text-stone-400 shadow-sm">
-                                   +{order.items.length - 3}
-                                </div>
-                              )}
                            </div>
                         </td>
                         <td className="px-10 py-8">
@@ -395,7 +463,23 @@ export default function AdminPage() {
                         <td className="px-10 py-6 text-stone-500 lowercase">{product.category}</td>
                         <td className="px-10 py-6 font-bold text-stone-900">KES {product.price.toLocaleString()}</td>
                         <td className="px-10 py-6 flex gap-3">
-                          <button className="text-stone-400 hover:text-stone-900"><Edit2 className="w-4 h-4" /></button>
+                          <button 
+                            onClick={() => {
+                              setEditingProduct(product);
+                              setProductForm({ 
+                                name: product.name, 
+                                price: Number(product.price), 
+                                category: product.category, 
+                                image_url: product.image_url, 
+                                description: product.description || '', 
+                                tagline: product.tagline || '' 
+                              });
+                              setShowProductModal(true);
+                            }}
+                            className="text-stone-400 hover:text-[#2271b1] p-2 hover:bg-stone-100 rounded-lg transition-all"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
                           <button 
                             onClick={async () => {
                               if (confirm('Delete this product?')) {
@@ -403,7 +487,7 @@ export default function AdminPage() {
                                 fetchData();
                               }
                             }}
-                            className="text-stone-400 hover:text-red-600"
+                            className="text-stone-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -428,8 +512,30 @@ export default function AdminPage() {
                         <td className="px-10 py-6 font-bold text-stone-900">{post.title}</td>
                         <td className="px-10 py-6 text-stone-400">{new Date(post.created_at).toLocaleDateString()}</td>
                         <td className="px-10 py-6 flex gap-4">
-                           <button className="text-stone-400 hover:text-stone-900"><Edit2 className="w-4 h-4" /></button>
-                           <button onClick={async () => { if(confirm('Delete post?')){ await supabase.from('blog_posts').delete().eq('id', post.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                           <button 
+                            onClick={() => {
+                              setEditingBlog(post);
+                              setBlogForm({
+                                title: post.title,
+                                slug: post.slug || '',
+                                excerpt: post.excerpt || '',
+                                content: post.content || '',
+                                image_url: post.image_url || '',
+                                meta_title: post.meta_title || '',
+                                meta_description: post.meta_description || ''
+                              });
+                              setShowBlogModal(true);
+                            }}
+                            className="text-stone-400 hover:text-[#2271b1] p-2 hover:bg-stone-100 rounded-lg transition-all"
+                           >
+                             <Edit2 className="w-4 h-4" />
+                           </button>
+                           <button 
+                            onClick={async () => { if(confirm('Delete post?')){ await supabase.from('blog_posts').delete().eq('id', post.id); fetchData(); }}} 
+                            className="text-stone-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-lg transition-all"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </button>
                         </td>
                       </tr>
                     ))}
@@ -468,7 +574,7 @@ export default function AdminPage() {
           )}
 
           {activeTab === 'messages' && (
-            <motion.div key="messages" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+            <motion.div key="messages" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
                     <tr><th className="px-10 py-6">From</th><th className="px-10 py-6">Message</th><th className="px-10 py-6">Actions</th></tr>
@@ -479,13 +585,29 @@ export default function AdminPage() {
                         <td className="px-10 py-6">
                            <p className="font-bold text-stone-900">{msg.name}</p>
                            <p className="text-[10px] text-stone-400 uppercase tracking-widest">{msg.email}</p>
+                           <p className="text-[10px] text-stone-300 mt-1 italic">{new Date(msg.created_at).toLocaleString()}</p>
                         </td>
-                        <td className="px-10 py-6 text-stone-600 max-w-md truncate">{msg.message}</td>
-                        <td className="px-10 py-6 flex gap-4">
+                        <td className="px-10 py-6 text-stone-600">
+                           <p className="font-bold text-stone-900 mb-1">{msg.subject}</p>
+                           <p className="max-w-md line-clamp-2">{msg.message}</p>
+                        </td>
+                        <td className="px-10 py-6 flex gap-3">
                            {msg.status === 'unread' && (
-                             <button onClick={async () => { await supabase.from('contact_messages').update({status: 'read'}).eq('id', msg.id); fetchData(); }} className="text-stone-400 hover:text-[#2271b1]"><Check className="w-4 h-4" /></button>
+                             <button 
+                                onClick={async () => { await supabase.from('contact_messages').update({status: 'read'}).eq('id', msg.id); fetchData(); }} 
+                                className="p-2 text-stone-400 hover:text-[#2271b1] hover:bg-stone-100 rounded-lg transition-all"
+                                title="Mark as Read"
+                             >
+                               <Check className="w-4 h-4" />
+                             </button>
                            )}
-                           <button onClick={async () => { if(confirm('Delete message?')){ await supabase.from('contact_messages').delete().eq('id', msg.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                           <button 
+                            onClick={async () => { if(confirm('Delete message?')){ await supabase.from('contact_messages').delete().eq('id', msg.id); fetchData(); }}} 
+                            className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                            title="Delete Message"
+                           >
+                             <Trash2 className="w-4 h-4" />
+                           </button>
                         </td>
                       </tr>
                     ))}
@@ -495,42 +617,167 @@ export default function AdminPage() {
           )}
 
           {activeTab === 'customers' && (
-            <motion.div key="customers" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+            <motion.div key="customers" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-sm">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
-                    <tr><th className="px-10 py-6">Email</th><th className="px-10 py-6">Role</th><th className="px-10 py-6">Status</th><th className="px-10 py-6">Actions</th></tr>
+                    <tr><th className="px-10 py-6">User Details</th><th className="px-10 py-6">Role</th><th className="px-10 py-6">Status</th><th className="px-10 py-6">Actions</th></tr>
                   </thead>
                   <tbody className="divide-y divide-stone-100">
                     {profiles.map(p => (
-                      <tr key={p.id}>
-                        <td className="px-10 py-6 font-bold text-stone-900">{p.email}</td>
+                      <tr key={p.id} className="hover:bg-stone-50/50 transition-all">
+                        <td className="px-10 py-6">
+                           <p className="font-bold text-stone-900">{p.email}</p>
+                           <p className="text-[10px] text-stone-400 mt-1 uppercase tracking-widest italic">{p.id.slice(0, 8)}</p>
+                        </td>
                         <td className="px-10 py-6">
                            <span className={`px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest ${p.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-stone-100 text-stone-500'}`}>
                              {p.role}
                            </span>
                         </td>
                         <td className="px-10 py-6">
-                           {p.is_approved ? <span className="text-green-600 font-bold text-[9px] uppercase tracking-widest">Approved</span> : <span className="text-amber-600 font-bold text-[9px] uppercase tracking-widest">Pending</span>}
+                           <button 
+                             onClick={async () => {
+                               await supabase.from('profiles').update({is_approved: !p.is_approved}).eq('id', p.id);
+                               fetchData();
+                             }}
+                             className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all ${p.is_approved ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}`}
+                           >
+                             {p.is_approved ? 'Approved' : 'Pending Approval'}
+                           </button>
                         </td>
-                        <td className="px-10 py-6 flex gap-4">
+                        <td className="px-10 py-6 flex gap-3">
                            <button 
                              onClick={async () => {
                                const newRole = p.role === 'admin' ? 'client' : 'admin';
-                               await supabase.from('profiles').update({role: newRole}).eq('id', p.id);
-                               fetchData();
+                               if (confirm(`Change ${p.email} role to ${newRole}?`)) {
+                                 await supabase.from('profiles').update({role: newRole}).eq('id', p.id);
+                                 fetchData();
+                               }
                              }}
-                             className="text-stone-400 hover:text-[#2271b1]"
-                             title="Toggle Admin Role"
+                             className={`p-2 rounded-lg transition-all ${p.role === 'admin' ? 'text-purple-600 bg-purple-50 hover:bg-purple-100' : 'text-stone-400 hover:text-stone-900 hover:bg-stone-100'}`}
+                             title={p.role === 'admin' ? 'Demote from Admin' : 'Promote to Admin'}
                            >
                              <ShieldCheck className="w-4 h-4" />
                            </button>
-                           <button onClick={async () => { if(confirm('Delete user profile?')){ await supabase.from('profiles').delete().eq('id', p.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                           {p.id !== user.id && (
+                             <button 
+                               onClick={async () => { if(confirm('Permanently delete this user profile?')){ await supabase.from('profiles').delete().eq('id', p.id); fetchData(); }}} 
+                               className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                               title="Delete User"
+                             >
+                               <Trash2 className="w-4 h-4" />
+                             </button>
+                           )}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Product Modal */}
+        <AnimatePresence>
+          {showProductModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowProductModal(false)} className="absolute inset-0 bg-[#f0f0f1]/80 backdrop-blur-sm" />
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-stone-200 overflow-hidden">
+                <div className="p-8 border-b border-stone-100 flex items-center justify-between bg-stone-50/50">
+                  <h3 className="text-2xl font-serif text-stone-900">{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
+                  <button onClick={() => setShowProductModal(false)} className="text-stone-400 hover:text-stone-900"><X className="w-6 h-6" /></button>
+                </div>
+                <form onSubmit={handleSaveProduct} className="p-10 space-y-6 max-h-[70vh] overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Product Name</label>
+                      <input required type="text" value={productForm.name} onChange={e => setProductForm({...productForm, name: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Price (KES)</label>
+                       <input required type="number" value={productForm.price} onChange={e => setProductForm({...productForm, price: Number(e.target.value)})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Category</label>
+                    <select value={productForm.category} onChange={e => setProductForm({...productForm, category: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]">
+                      {['All', 'Totes', 'Shoulder bags', 'Heels', 'Charms', 'Clutches', 'Satchels', 'Crossbody', 'Bucket', 'Weekender', 'New Arrival'].map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Image URL</label>
+                    <input required type="text" value={productForm.image_url} onChange={e => setProductForm({...productForm, image_url: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Description</label>
+                    <textarea value={productForm.description} onChange={e => setProductForm({...productForm, description: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] h-32" />
+                  </div>
+                  <div className="pt-6 border-t border-stone-100 flex justify-end gap-4">
+                     <button type="button" onClick={() => setShowProductModal(false)} className="px-8 py-3 rounded font-bold text-xs uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-all">Cancel</button>
+                     <button type="submit" disabled={!!actionLoading} className="px-8 py-3 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] shadow-lg transition-all flex items-center gap-2">
+                        {actionLoading === 'saving_product' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save Product'}
+                     </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        {/* Blog Modal */}
+        <AnimatePresence>
+          {showBlogModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowBlogModal(false)} className="absolute inset-0 bg-[#f0f0f1]/80 backdrop-blur-sm" />
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-stone-200 overflow-hidden">
+                <div className="p-8 border-b border-stone-100 flex items-center justify-between bg-stone-50/50">
+                  <h3 className="text-2xl font-serif text-stone-900">{editingBlog ? 'Edit Post' : 'Write New Post'}</h3>
+                  <button onClick={() => setShowBlogModal(false)} className="text-stone-400 hover:text-stone-900"><X className="w-6 h-6" /></button>
+                </div>
+                <form onSubmit={handleSaveBlog} className="p-10 space-y-6 max-h-[80vh] overflow-y-auto">
+                  <div className="grid grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Title</label>
+                        <input required type="text" value={blogForm.title} onChange={e => setBlogForm({...blogForm, title: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] text-lg font-bold" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Slug (URL)</label>
+                        <input type="text" value={blogForm.slug} onChange={e => setBlogForm({...blogForm, slug: e.target.value})} placeholder="auto-generated-if-empty" className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] font-mono text-xs" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Featured Image URL</label>
+                        <input required type="text" value={blogForm.image_url} onChange={e => setBlogForm({...blogForm, image_url: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                      </div>
+                    </div>
+                    <div className="space-y-6">
+                       <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Meta Title</label>
+                        <input type="text" value={blogForm.meta_title} onChange={e => setBlogForm({...blogForm, meta_title: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Meta Description</label>
+                        <textarea value={blogForm.meta_description} onChange={e => setBlogForm({...blogForm, meta_description: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] h-20" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Excerpt</label>
+                    <textarea value={blogForm.excerpt} onChange={e => setBlogForm({...blogForm, excerpt: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] h-20" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Content</label>
+                    <textarea required value={blogForm.content} onChange={e => setBlogForm({...blogForm, content: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1] h-64 font-serif leading-relaxed" />
+                  </div>
+                  <div className="pt-6 border-t border-stone-100 flex justify-end gap-4">
+                     <button type="button" onClick={() => setShowBlogModal(false)} className="px-8 py-3 rounded font-bold text-xs uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-all">Cancel</button>
+                     <button type="submit" disabled={!!actionLoading} className="px-10 py-4 bg-[#2271b1] text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-[#135e96] shadow-xl transition-all flex items-center gap-2">
+                        {actionLoading === 'saving_blog' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Publish / Update Post'}
+                     </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </main>
