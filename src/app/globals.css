@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&display=swap');
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+:root {
+  --background: #F5F2EB;
+  --foreground: #2C2A26;
+  --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
+}
+
+
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: var(--font-inter);
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-playfair);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Premium Component Classes */
+@layer components {
+  .btn-premium {
+    @apply inline-block px-10 py-5 bg-stone-950 text-stone-50 text-[10px] font-bold uppercase tracking-[0.3em] transition-all duration-700 hover:bg-transparent hover:text-stone-950 border border-stone-950;
+  }
+}
+
+/* Custom Overrides */
+input, select, textarea {
+  @apply bg-transparent border-b border-stone-200 py-3 outline-none focus:border-stone-950 transition-colors;
+}
+
+/* Article Content Formatting (Mel's Fashion Journal) */
+.article-content p {
+  margin-bottom: 2rem;
+}
+
+.article-content h2 {
+  font-family: var(--font-playfair);
+  font-size: 2.5rem;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  color: #1c1917;
+}
+
+.article-content blockquote {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: 1.5rem;
+  border-left: 4px solid #1c1917;
+  padding-left: 2rem;
+  margin: 4rem 0;
+  color: #444;
+}

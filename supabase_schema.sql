@@ -131,9 +131,12 @@ CREATE TABLE IF NOT EXISTS orders (
   phone_number TEXT NOT NULL,
   amount NUMERIC NOT NULL,
   items JSONB NOT NULL,
+  shipping_address JSONB,
+  payment_date TIMESTAMP WITH TIME ZONE,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'failed', 'completed')),
   mpesa_receipt_number TEXT,
   checkout_request_id TEXT,
+  notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
