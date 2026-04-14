@@ -85,6 +85,17 @@ ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
+-- Helper function to check admin status
+CREATE OR REPLACE FUNCTION public.check_is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Profiles: Users can read their own, Admin can read/write all
 CREATE POLICY "Public profile check" ON profiles FOR SELECT USING (true);
 CREATE POLICY "Users can insert their own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
@@ -142,9 +153,9 @@ CREATE TABLE IF NOT EXISTS orders (
 
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
--- Orders: Users can read their own, Admin can read/write all
-CREATE POLICY "Users can view their own orders" ON orders FOR SELECT USING (auth.uid() = customer_id);
-CREATE POLICY "Users can insert their own orders" ON orders FOR INSERT WITH CHECK (auth.uid() = customer_id);
+-- Orders: Anyone can insert (for guest checkout), Users can view their own, Admin can do all
+CREATE POLICY "Anyone can insert orders" ON orders FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can view their own orders" ON orders FOR SELECT USING (auth.uid() = customer_id OR customer_id IS NULL);
 CREATE POLICY "Admins can manage all orders" ON orders FOR ALL USING (
-  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  public.check_is_admin()
 );

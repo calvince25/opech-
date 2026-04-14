@@ -368,17 +368,168 @@ export default function AdminPage() {
             </motion.div>
           )}
 
-          {/* Other tabs would go here, following the same premium aesthetic */}
-          {activeTab !== 'dashboard' && activeTab !== 'settings' && activeTab !== 'orders' && (
+          {activeTab === 'products' && (
             <motion.div 
-              key="other"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-white p-20 rounded-3xl border border-stone-200 border-dashed text-center"
+              key="products"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden"
             >
-               <ShieldCheck className="w-12 h-12 text-stone-200 mx-auto mb-6" />
-               <p className="text-xl font-serif text-stone-400 italic">Detailed {activeTab} management is coming in the next release.</p>
-               <p className="text-xs font-bold uppercase tracking-widest text-stone-300 mt-4">Feature Locked</p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
+                    <tr>
+                      <th className="px-10 py-6">Product</th>
+                      <th className="px-10 py-6">Category</th>
+                      <th className="px-10 py-6">Price</th>
+                      <th className="px-10 py-6">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100 italic font-serif">
+                    {products.map(product => (
+                      <tr key={product.id} className="hover:bg-stone-50 transition-all">
+                        <td className="px-10 py-6 flex items-center gap-4">
+                          <img src={product.image_url} className="w-12 h-12 rounded object-cover" />
+                          <span className="text-stone-900 font-bold">{product.name}</span>
+                        </td>
+                        <td className="px-10 py-6 text-stone-500 lowercase">{product.category}</td>
+                        <td className="px-10 py-6 font-bold text-stone-900">KES {product.price.toLocaleString()}</td>
+                        <td className="px-10 py-6 flex gap-3">
+                          <button className="text-stone-400 hover:text-stone-900"><Edit2 className="w-4 h-4" /></button>
+                          <button 
+                            onClick={async () => {
+                              if (confirm('Delete this product?')) {
+                                await supabase.from('products').delete().eq('id', product.id);
+                                fetchData();
+                              }
+                            }}
+                            className="text-stone-400 hover:text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'blog' && (
+            <motion.div key="blog" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
+                    <tr><th className="px-10 py-6">Title</th><th className="px-10 py-6">Date</th><th className="px-10 py-6">Actions</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {blogPosts.map(post => (
+                      <tr key={post.id}>
+                        <td className="px-10 py-6 font-bold text-stone-900">{post.title}</td>
+                        <td className="px-10 py-6 text-stone-400">{new Date(post.created_at).toLocaleDateString()}</td>
+                        <td className="px-10 py-6 flex gap-4">
+                           <button className="text-stone-400 hover:text-stone-900"><Edit2 className="w-4 h-4" /></button>
+                           <button onClick={async () => { if(confirm('Delete post?')){ await supabase.from('blog_posts').delete().eq('id', post.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+            </motion.div>
+          )}
+
+          {activeTab === 'reviews' && (
+            <motion.div key="reviews" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
+                    <tr><th className="px-10 py-6">Customer</th><th className="px-10 py-6">Rating</th><th className="px-10 py-6">Status</th><th className="px-10 py-6">Actions</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {reviews.map(review => (
+                      <tr key={review.id}>
+                        <td className="px-10 py-6 font-bold text-stone-900">{review.customer_name}</td>
+                        <td className="px-10 py-6 text-amber-500 font-bold">★ {review.rating}</td>
+                        <td className="px-10 py-6">
+                           <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold ${review.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                             {review.status}
+                           </span>
+                        </td>
+                        <td className="px-10 py-6 flex gap-4">
+                           {review.status === 'pending' && (
+                             <button onClick={async () => { await supabase.from('reviews').update({status: 'published'}).eq('id', review.id); fetchData(); }} className="text-stone-400 hover:text-green-600"><Check className="w-4 h-4" /></button>
+                           )}
+                           <button onClick={async () => { if(confirm('Delete review?')){ await supabase.from('reviews').delete().eq('id', review.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+            </motion.div>
+          )}
+
+          {activeTab === 'messages' && (
+            <motion.div key="messages" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
+                    <tr><th className="px-10 py-6">From</th><th className="px-10 py-6">Message</th><th className="px-10 py-6">Actions</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {messages.map(msg => (
+                      <tr key={msg.id} className={msg.status === 'unread' ? 'bg-stone-50' : ''}>
+                        <td className="px-10 py-6">
+                           <p className="font-bold text-stone-900">{msg.name}</p>
+                           <p className="text-[10px] text-stone-400 uppercase tracking-widest">{msg.email}</p>
+                        </td>
+                        <td className="px-10 py-6 text-stone-600 max-w-md truncate">{msg.message}</td>
+                        <td className="px-10 py-6 flex gap-4">
+                           {msg.status === 'unread' && (
+                             <button onClick={async () => { await supabase.from('contact_messages').update({status: 'read'}).eq('id', msg.id); fetchData(); }} className="text-stone-400 hover:text-[#2271b1]"><Check className="w-4 h-4" /></button>
+                           )}
+                           <button onClick={async () => { if(confirm('Delete message?')){ await supabase.from('contact_messages').delete().eq('id', msg.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+            </motion.div>
+          )}
+
+          {activeTab === 'customers' && (
+            <motion.div key="customers" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-stone-50 text-stone-500 font-bold uppercase tracking-widest text-[10px]">
+                    <tr><th className="px-10 py-6">Email</th><th className="px-10 py-6">Role</th><th className="px-10 py-6">Status</th><th className="px-10 py-6">Actions</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {profiles.map(p => (
+                      <tr key={p.id}>
+                        <td className="px-10 py-6 font-bold text-stone-900">{p.email}</td>
+                        <td className="px-10 py-6">
+                           <span className={`px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest ${p.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-stone-100 text-stone-500'}`}>
+                             {p.role}
+                           </span>
+                        </td>
+                        <td className="px-10 py-6">
+                           {p.is_approved ? <span className="text-green-600 font-bold text-[9px] uppercase tracking-widest">Approved</span> : <span className="text-amber-600 font-bold text-[9px] uppercase tracking-widest">Pending</span>}
+                        </td>
+                        <td className="px-10 py-6 flex gap-4">
+                           <button 
+                             onClick={async () => {
+                               const newRole = p.role === 'admin' ? 'client' : 'admin';
+                               await supabase.from('profiles').update({role: newRole}).eq('id', p.id);
+                               fetchData();
+                             }}
+                             className="text-stone-400 hover:text-[#2271b1]"
+                             title="Toggle Admin Role"
+                           >
+                             <ShieldCheck className="w-4 h-4" />
+                           </button>
+                           <button onClick={async () => { if(confirm('Delete user profile?')){ await supabase.from('profiles').delete().eq('id', p.id); fetchData(); }}} className="text-stone-400 hover:text-red-600"><Trash2 className="w-4 h-4" /></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
             </motion.div>
           )}
         </AnimatePresence>
