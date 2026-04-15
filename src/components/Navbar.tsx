@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '../lib/supabase';
 import { BRAND_NAME } from '../constants';
 import { User as UserIcon, LogOut, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
 
 interface NavbarProps {
   cartCount: number;
@@ -60,9 +61,15 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart, user, isAdmin })
           {/* Logo */}
           <Link 
             href="/" 
-            className={`text-3xl font-serif font-medium tracking-tight z-50 relative transition-colors duration-500 ${textColorClass}`}
+            className="z-50 relative flex items-center transition-transform hover:scale-105 duration-300"
           >
-            {BRAND_NAME}
+            <Image 
+              src="/logo.jpg" 
+              alt={BRAND_NAME} 
+              width={60} 
+              height={60} 
+              className="rounded-full shadow-lg border border-white/10"
+            />
           </Link>
           
           {/* Center Links - Desktop */}
