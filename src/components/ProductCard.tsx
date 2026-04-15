@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { Product } from '../types';
 import { useCart } from '@/providers/CartProvider';
 import { useRouter } from 'next/navigation';
@@ -27,10 +28,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div onClick={handleCardClick} className="group flex flex-col gap-6 cursor-pointer no-underline">
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#EBE7DE]">
-        <img 
+        <Image 
           src={product.image_url} 
           alt={`${product.name} - Handcrafted Leather Handbag in Nairobi`} 
-          className="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 sepia-[0.1]"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 sepia-[0.1]"
           loading="lazy"
         />
         

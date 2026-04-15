@@ -92,6 +92,8 @@ export interface SiteSettings {
 export interface Order {
   id: string;
   customer_id?: string;
+  customer_name?: string;
+  customer_email?: string;
   phone_number: string;
   amount: number;
   items: any[];

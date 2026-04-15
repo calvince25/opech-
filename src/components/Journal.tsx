@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '../lib/supabase';
 import { BlogPost } from '../types';
 import { Loader2, ArrowRight } from 'lucide-react';
@@ -40,11 +41,12 @@ const Journal: React.FC<JournalProps> = ({ fullPage = false }) => {
       {/* Hero Image — Full Page Only */}
       {fullPage && (
         <div className="relative h-[55vh] min-h-[420px] mb-20 overflow-hidden">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=2000"
             alt="Handcrafted Premium Handbags Kenya - Mel's Fashion Blog"
-            className="w-full h-full object-cover"
-            loading="eager"
+            fill
+            priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-stone-900/30 via-stone-900/20 to-stone-50 flex items-end pb-16 px-6 md:px-12">
             <motion.div 
@@ -97,10 +99,11 @@ const Journal: React.FC<JournalProps> = ({ fullPage = false }) => {
                     className="flex flex-col"
                   >
                     <div className="w-full aspect-[4/3] overflow-hidden mb-8 bg-stone-100 rounded-xl">
-                      <img 
+                      <Image 
                         src={article.image_url || 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1000'}
                         alt={article.title} 
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[0.2] group-hover:grayscale-0"
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[0.2] group-hover:grayscale-0"
                         loading="lazy"
                       />
                     </div>

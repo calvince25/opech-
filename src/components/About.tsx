@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const About: React.FC = () => {
   return (
@@ -18,11 +19,14 @@ const About: React.FC = () => {
           <p className="text-lg md:text-xl text-stone-600 font-light leading-relaxed mb-8">
             Every bag is a labor of love, handcrafted by skilled artisans who take pride in their work. We use only the finest Kenyan leather, ensuring that each piece is as durable as it is beautiful.
           </p>
-          <img 
-            src="https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1260" 
-            alt="Mel's Fashion Workshop" 
-            className="w-full h-[500px] object-cover grayscale contrast-[0.9] brightness-110 mt-12 rounded-3xl"
-          />
+          <div className="relative w-full h-[500px] mt-12 rounded-3xl overflow-hidden">
+            <Image 
+              src="https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1260" 
+              alt="Mel's Fashion Workshop" 
+              fill
+              className="object-cover grayscale contrast-[0.9] brightness-110"
+            />
+          </div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-stone-300 mt-6">
             Establishing Roots: The Mel's Fashion Workshop, Nairobi
           </p>
@@ -32,10 +36,11 @@ const About: React.FC = () => {
       {/* Philosophy Blocks */}
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh]">
         <div className="order-2 lg:order-1 relative h-[600px] lg:h-auto overflow-hidden group">
-           <img 
+           <Image 
              src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=1200" 
              alt="Leather Texture" 
-             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+             fill
+             className="object-cover transition-transform duration-[2s] group-hover:scale-105"
            />
         </div>
         <div className="order-1 lg:order-2 flex flex-col justify-center p-12 lg:p-32 bg-stone-100">
@@ -60,10 +65,11 @@ const About: React.FC = () => {
            </p>
         </div>
         <div className="relative h-[500px] lg:h-auto overflow-hidden group">
-           <img 
+           <Image 
              src="https://images.unsplash.com/photo-1583209814683-c023dd293cc6?auto=format&fit=crop&q=80&w=1260" 
              alt="Urban Nairobi" 
-             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105 brightness-90"
+             fill
+             className="object-cover transition-transform duration-[2s] group-hover:scale-105 brightness-90"
            />
         </div>
       </div>

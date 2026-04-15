@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const Features: React.FC = () => {
   return (
@@ -6,10 +7,11 @@ const Features: React.FC = () => {
       {/* Feature Block 1 - Handcrafted */}
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh]">
         <div className="order-2 lg:order-1 relative h-[500px] lg:h-auto overflow-hidden group">
-           <img 
+           <Image 
              src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=1200" 
              alt="Handstitching leather" 
-             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+             fill
+             className="object-cover transition-transform duration-[2s] group-hover:scale-105"
            />
         </div>
         <div className="order-1 lg:order-2 flex flex-col justify-center p-12 lg:p-24 bg-[#EBE7DE]">
@@ -36,10 +38,11 @@ const Features: React.FC = () => {
            </p>
         </div>
         <div className="relative h-[500px] lg:h-auto overflow-hidden group">
-           <img 
+           <Image 
              src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=1200" 
              alt="Nairobi artisan working" 
-             className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105 brightness-90"
+             fill
+             className="object-cover transition-transform duration-[2s] group-hover:scale-105 brightness-90"
            />
         </div>
       </div>

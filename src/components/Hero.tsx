@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Image from 'next/image';
 
 const Hero: React.FC = () => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -31,10 +32,12 @@ const Hero: React.FC = () => {
       
       {/* Background Image - Nairobi/Fashion Vibe */}
       <div className="absolute inset-0 w-full h-full">
-        <img 
+        <Image 
             src="https://www.shutterstock.com/image-photo/set-stylish-female-clothes-accessories-600nw-2696516961.jpg" 
             alt="Premium leather bag" 
-            className="w-full h-full object-cover grayscale contrast-[0.7] brightness-[0.95] animate-[pulse_15s_ease-in-out_infinite_alternate]"
+            fill
+            priority
+            className="object-cover grayscale contrast-[0.7] brightness-[0.95] animate-[pulse_15s_ease-in-out_infinite_alternate]"
         />
         {/* Warmer Overlay for Richness */}
         <div className="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
