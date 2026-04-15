@@ -166,6 +166,20 @@ export default function AdminPage() {
     setActionLoading(null);
   };
 
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to permanently delete this order? This action cannot be undone.')) return;
+    
+    setActionLoading('deleting_order');
+    const { error } = await supabase.from('orders').delete().eq('id', orderId);
+    
+    if (!error) {
+      fetchData();
+    } else {
+      alert('Error deleting order: ' + error.message);
+    }
+    setActionLoading(null);
+  };
+
   return (
     <div className="pt-24 min-h-screen flex bg-[#f0f0f1]">
       {/* Sidebar */}
@@ -455,8 +469,15 @@ export default function AdminPage() {
                                    <Check className="w-4 h-4" />
                                 </button>
                               )}
-                              <button className="p-3 bg-white border border-stone-200 text-stone-400 rounded-xl hover:text-stone-900 transition-all">
+                               <button className="p-3 bg-white border border-stone-200 text-stone-400 rounded-xl hover:text-stone-900 transition-all">
                                  <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteOrder(order.id)}
+                                className="p-3 bg-white border border-stone-200 text-stone-400 hover:text-red-600 rounded-xl transition-all"
+                                title="Permanently Delete Order"
+                              >
+                                 <Trash2 className="w-4 h-4" />
                               </button>
                            </div>
                         </td>
@@ -739,9 +760,8 @@ export default function AdminPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Category</label>
                     <select value={productForm.category} onChange={e => setProductForm({...productForm, category: e.target.value})} className="w-full bg-stone-50 border border-stone-200 px-4 py-3 rounded outline-none focus:border-[#2271b1]">
-                      {['All', 'Totes', 'Shoulder bags', 'Heels', 'Charms', 'Clutches', 'Satchels', 'Crossbody', 'Bucket', 'Weekender', 'New Arrival'].map(c => <option key={c} value={c}>{c}</option>)}
+                      {['All', 'Heels', 'Charms', 'Shoulder bags', 'Wallets', 'Leather Handbags', 'Crossbody Bags', 'Tote Bags', 'Clutch Bags', 'Sale', 'New Arrivals'].map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-2">
