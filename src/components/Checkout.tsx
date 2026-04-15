@@ -6,6 +6,7 @@
 
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Product } from '../types';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';

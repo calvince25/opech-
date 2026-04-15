@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import About from '@/components/About';
 import StructuredData from '@/components/SEO/StructuredData';

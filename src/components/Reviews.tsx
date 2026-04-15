@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Star, Loader2, X, Send, Award, MessageSquare, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Review } from '../types';

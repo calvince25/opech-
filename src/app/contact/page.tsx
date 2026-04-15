@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import ContactForm from '@/components/ContactForm';
 import StructuredData from '@/components/SEO/StructuredData';
