@@ -23,14 +23,14 @@ export const metadata: Metadata = {
     address: true,
     telephone: true,
   },
-  metadataBase: new URL("https://www.mellsfasion.co.ke"),
+  metadataBase: new URL("https://www.mellsfashion.co.ke"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Mel's Fashion | Premium Handcrafted Handbags",
     description: "The home of premium handbags in Kenya. Handcrafted in Nairobi with artisanal excellence.",
-    url: "https://www.mellsfasion.co.ke",
+    url: "https://www.mellsfashion.co.ke",
     siteName: "Mel's Fashion",
     locale: "en_KE",
     type: "website",

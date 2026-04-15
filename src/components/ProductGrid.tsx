@@ -7,7 +7,7 @@ import ProductCard from './ProductCard';
 import { supabase } from '../lib/supabase';
 import { Loader2 } from 'lucide-react';
 
-const categories = ['All', 'Heels', 'Charms', 'Shoulder bags', 'Leather Handbags', 'Crossbody Bags', 'Tote Bags', 'Clutch Bags', 'Sale', 'New Arrivals'];
+const categories = ['All', 'Heels', 'Charms', 'Shoulder bags', 'Wallets', 'Leather Handbags', 'Crossbody Bags', 'Tote Bags', 'Clutch Bags', 'Sale', 'New Arrivals'];
 
 interface ProductGridProps {
   initialCategory?: string;

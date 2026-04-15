@@ -41,6 +41,12 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  // Transform relative Supabase URLs to absolute ones if needed
+  const transformedContent = post.content.replace(
+    /src="\/storage\/v1\/object\/public\//g,
+    `src="${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/`
+  );
+
   return (
     <>
       <div className="min-h-screen bg-[#F5F2EB]">
@@ -88,7 +94,7 @@ export default async function BlogPostPage({ params }: Props) {
 
             <div 
               className="prose prose-stone prose-lg max-w-none font-light leading-relaxed text-stone-600 article-content"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: transformedContent }}
             />
             
             <div className="mt-20 pt-16 border-t border-stone-100 flex flex-col items-center">
