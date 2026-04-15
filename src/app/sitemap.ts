@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.mellsfasion.co.ke';
+  const baseUrl = 'https://www.mellsfashion.co.ke';
 
   // Static routes
   const staticRoutes = [

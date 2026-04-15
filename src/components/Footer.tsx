@@ -51,7 +51,7 @@ export default function Footer() {
           <div className="text-[10px] font-bold uppercase tracking-[0.2em] space-y-4">
             <p className="flex items-center gap-4"><span className="text-stone-300">HQ:</span> Nairobi, Kenya</p>
             <p className="flex items-center gap-4"><span className="text-stone-300">TEL:</span> +254 740 899 918</p>
-            <p className="flex items-center gap-4"><span className="text-stone-300">EML:</span> hello@mellsfasion.co.ke</p>
+            <p className="flex items-center gap-4"><span className="text-stone-300">EML:</span> hello@mellsfashion.co.ke</p>
           </div>
           <div className="mt-12 flex gap-4 items-center">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-stone-100 rounded-md border border-stone-200">

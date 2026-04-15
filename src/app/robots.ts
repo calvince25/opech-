@@ -14,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         '/*.json',
       ],
     },
-    sitemap: 'https://www.mellsfasion.co.ke/sitemap.xml',
+    sitemap: 'https://www.mellsfashion.co.ke/sitemap.xml',
   };
 }
