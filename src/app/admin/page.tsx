@@ -17,6 +17,14 @@ export default function AdminPage() {
   const { user, profile, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
 
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
