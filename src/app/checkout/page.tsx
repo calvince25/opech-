@@ -44,13 +44,13 @@ export default function CheckoutPage() {
     try {
       const orderPayload = {
         customer_id: user?.id || null,
-        customer_name: `${form.firstName} ${form.lastName}`.trim(),
-        customer_email: form.email,
         phone_number: form.phone,
         amount: subtotal,
         items: cartItems,
         status: 'pending',
         shipping_address: {
+          name: `${form.firstName} ${form.lastName}`.trim(),
+          email: form.email,
           address: form.address,
           city: form.city,
         },
