@@ -98,7 +98,7 @@ const Journal: React.FC<JournalProps> = ({ fullPage = false }) => {
                     transition={{ delay: index * 0.1 }}
                     className="flex flex-col"
                   >
-                    <div className="w-full aspect-[4/3] overflow-hidden mb-8 bg-stone-100 rounded-xl">
+                    <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 bg-stone-100 rounded-xl">
                       <Image 
                         src={article.image_url || 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1000'}
                         alt={article.title} 
