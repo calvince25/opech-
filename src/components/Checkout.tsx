@@ -221,10 +221,10 @@ const Checkout: React.FC<CheckoutProps> = ({ items, onBack }) => {
             
             <div className="space-y-6 mb-8">
                {items.map((item, idx) => (
-                 <div key={idx} className="flex gap-4">
-                    <div className="w-16 h-16 bg-[#EBE7DE] relative">
-                       <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
-                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#2C2A26] text-white text-[10px] flex items-center justify-center rounded-full">1</span>
+                  <div key={idx} className="flex gap-4">
+                    <div className="w-16 h-16 bg-[#EBE7DE] relative overflow-hidden">
+                       <Image src={item.image_url} alt={item.name} fill className="object-cover" />
+                       <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#2C2A26] text-white text-[10px] flex items-center justify-center rounded-full z-10">1</span>
                     </div>
                     <div className="flex-1">
                        <h3 className="font-serif text-[#2C2A26] text-base">{item.name}</h3>

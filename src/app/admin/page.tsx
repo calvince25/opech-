@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, 
   MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, 
-  Check, X, Loader2, Mail, Trash2, Edit2, ShieldCheck 
+  Check, X, Loader2, Mail, Trash2, Edit2, ShieldCheck, Menu
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Profile, BlogPost, Review, ContactMessage, Product, SiteSettings } from '@/types';
@@ -16,15 +16,8 @@ export default function AdminPage() {
   const { user, profile, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // CRUD States
   const [showProductModal, setShowProductModal] = useState(false);
@@ -181,9 +174,22 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="pt-24 min-h-screen flex bg-[#f0f0f1]">
+    <div className="pt-16 lg:pt-24 min-h-screen flex bg-[#f0f0f1]">
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-[#1d2327] hidden lg:flex flex-col fixed top-16 bottom-0 left-0 z-20">
+      <aside className={`w-64 bg-[#1d2327] flex flex-col fixed top-16 bottom-0 left-0 z-50 transition-transform duration-300 transform lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} z-50`}>
         <div className="px-6 py-8 border-b border-white/10">
           <h2 className="text-sm font-bold text-white uppercase tracking-widest">Admin Dashboard</h2>
           <p className="text-[10px] text-white/40 mt-1 uppercase tracking-widest font-bold">WP-Style Management</p>
@@ -201,7 +207,10 @@ export default function AdminPage() {
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                setIsSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-4 px-6 py-4 text-sm font-medium transition-all ${
                 activeTab === item.id 
                   ? 'bg-[#2271b1] text-white' 
@@ -216,9 +225,17 @@ export default function AdminPage() {
       </aside>
 
       {/* Content */}
-      <main className="flex-1 lg:ml-64 p-8 md:p-12">
-        <header className="flex items-center justify-between mb-10">
-          <h1 className="text-3xl font-serif text-stone-900 capitalize font-bold tracking-tight">{activeTab}</h1>
+      <main className="flex-1 lg:ml-64 p-4 md:p-8 lg:p-12">
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+          <div className="flex items-center gap-4">
+             <button 
+                onClick={() => setIsSidebarOpen(true)}
+                className="p-2 lg:hidden bg-white rounded border border-stone-200 text-stone-900"
+             >
+                <Menu className="w-5 h-5" />
+             </button>
+             <h1 className="text-3xl font-serif text-stone-900 capitalize font-bold tracking-tight">{activeTab}</h1>
+          </div>
           <div className="flex gap-4">
              {activeTab === 'products' && (
                <button 
@@ -426,7 +443,9 @@ export default function AdminPage() {
                            <div className="space-y-2">
                               {order.items?.map((item: any, i: number) => (
                                 <div key={i} className="flex items-center gap-3">
-                                   <img src={item.image_url} className="w-8 h-8 rounded border border-stone-100 object-cover" />
+                                   <div className="relative w-8 h-8 rounded border border-stone-100 overflow-hidden">
+                                      <Image src={item.image_url} alt={item.name} fill className="object-cover" />
+                                   </div>
                                    <div>
                                       <p className="text-[11px] font-bold text-stone-900 leading-none">{item.name}</p>
                                       <p className="text-[9px] text-stone-400 uppercase tracking-widest mt-1">QTY: 1</p>
@@ -518,7 +537,9 @@ export default function AdminPage() {
                     {products.map(product => (
                       <tr key={product.id} className="hover:bg-stone-50 transition-all">
                         <td className="px-10 py-6 flex items-center gap-4">
-                          <img src={product.image_url} className="w-12 h-12 rounded object-cover" />
+                          <div className="relative w-12 h-12 rounded overflow-hidden border border-stone-100">
+                             <Image src={product.image_url} alt={product.name} fill className="object-cover" />
+                          </div>
                           <span className="text-stone-900 font-bold">{product.name}</span>
                         </td>
                         <td className="px-10 py-6 text-stone-500 lowercase">{product.category}</td>
@@ -767,13 +788,18 @@ export default function AdminPage() {
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Product Image</label>
                     <div className="flex items-center gap-6">
-                       <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-2xl h-32 hover:border-[#2271b1] cursor-pointer bg-stone-50 transition-all overflow-hidden group">
-                          {previewUrl || productForm.image_url ? (
-                             <img src={previewUrl || productForm.image_url} className="w-full h-full object-cover group-hover:opacity-50 transition-opacity" />
+                       <label className="group relative aspect-video bg-stone-50 border-2 border-dashed border-stone-200 rounded-xl overflow-hidden flex items-center justify-center cursor-pointer hover:border-stone-300 transition-all flex-1 h-32">
+                          {(previewUrl || productForm.image_url) ? (
+                             <Image 
+                               src={previewUrl || productForm.image_url} 
+                               alt="Preview" 
+                               fill 
+                               className="object-cover group-hover:opacity-50 transition-opacity" 
+                             />
                           ) : (
-                             <div className="flex flex-col items-center text-stone-400">
-                                <Plus className="w-6 h-6 mb-2" />
-                                <span className="text-[10px] font-bold uppercase tracking-widest">Select Photo</span>
+                             <div className="text-center">
+                                <Plus className="w-8 h-8 text-stone-300 mx-auto mb-2" />
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Upload Product Image</p>
                              </div>
                           )}
                           <input 

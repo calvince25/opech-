@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Image from 'next/image';
 import { BlogPost } from '../types';
 import { motion } from 'motion/react';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
@@ -39,11 +40,13 @@ export default function BlogPostDetail({ post, onBack }: BlogPostProps) {
           <h1 className="text-4xl md:text-6xl font-serif text-[#2C2A26] leading-tight mb-12">
             {post.title}
           </h1>
-          <div className="aspect-[21/9] bg-[#EBE7DE] overflow-hidden rounded-2xl">
-            <img 
+          <div className="relative aspect-[21/9] bg-[#EBE7DE] overflow-hidden rounded-2xl">
+            <Image 
               src={post.image_url} 
               alt={post.title} 
-              className="w-full h-full object-cover"
+              fill
+              priority
+              className="object-cover"
             />
           </div>
         </header>

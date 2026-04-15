@@ -39,11 +39,12 @@ export default function Blog({ onArticleClick }: BlogProps) {
     <section className="bg-[#F5F2EB] pb-32">
       {/* Hero Image */}
       <div className="relative h-[55vh] min-h-[420px] mb-20 overflow-hidden">
-        <img
+        <Image
           src="/blog-hero.jpg"
           alt="Premium Handbags Kenya - Mel's Fashion Blog"
-          className="w-full h-full object-cover"
-          loading="eager"
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/20 to-[#F5F2EB] flex items-end pb-16 px-6 md:px-12">
           <motion.div 
@@ -77,11 +78,13 @@ export default function Blog({ onArticleClick }: BlogProps) {
                 className="group cursor-pointer"
                 onClick={() => onArticleClick(post)}
               >
-                <div className="aspect-[16/10] bg-[#EBE7DE] overflow-hidden mb-8">
-                  <img 
+                <div className="relative aspect-[16/10] bg-[#EBE7DE] overflow-hidden mb-8">
+                  <Image 
                     src={post.image_url} 
                     alt={post.title} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                 </div>
                 <div className="space-y-4">

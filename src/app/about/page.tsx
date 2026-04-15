@@ -17,10 +17,12 @@ export default function AboutPage() {
       <StructuredData type="Organization" data={{}} />
       
       <div className="relative w-full h-[60vh] min-h-[500px]">
-        <img 
+        <Image 
           src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=2000" 
-          alt="Mel's Fashion Heritage" 
-          className="absolute inset-0 w-full h-full object-cover"
+          alt="About Mel's Fashion" 
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-6 text-center">

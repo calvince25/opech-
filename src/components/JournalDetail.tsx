@@ -5,6 +5,7 @@
 
 
 import React from 'react';
+import Image from 'next/image';
 import { BlogPost } from '../types';
 import SEO from './SEO';
 
@@ -24,10 +25,12 @@ const JournalDetail: React.FC<JournalDetailProps> = ({ article, onBack }) => {
        />
        {/* Hero Image for Article - Full bleed to top so navbar sits on it */}
        <div className="w-full h-[50vh] md:h-[60vh] relative overflow-hidden">
-          <img 
+          <Image 
              src={article.image_url} 
              alt={article.title} 
-             className="w-full h-full object-cover grayscale-[0.2] brightness-90"
+             fill
+             priority
+             className="object-cover grayscale-[0.2] brightness-90"
           />
           <div className="absolute inset-0 bg-stone-900/10"></div>
        </div>

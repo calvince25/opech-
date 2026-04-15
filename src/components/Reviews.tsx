@@ -75,12 +75,12 @@ export default function Reviews({ fullPage = false }: ReviewsProps) {
     <div className={`${fullPage ? 'pt-24 pb-24' : 'mt-20 border-t border-stone-200 pt-16'}`}>
       {fullPage && (
         <div className="relative h-[50vh] min-h-[400px] mb-16 overflow-hidden">
-          <img 
+          <Image 
             src="/reviews-hero.jpg" 
             alt="Handcrafted Premium Handbags Kenya - Mel's Fashion" 
-            className="w-full h-full object-cover"
-            loading="eager"
-            fetchPriority="high"
+            fill
+            priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-stone-900/40 flex items-center justify-center text-center px-6">
             <motion.div 

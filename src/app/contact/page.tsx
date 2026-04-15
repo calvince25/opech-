@@ -17,10 +17,12 @@ export default function ContactPage() {
       <StructuredData type="LocalBusiness" data={{}} />
       
       <div className="relative w-full h-[60vh] min-h-[500px]">
-        <img 
+        <Image 
           src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000" 
-          alt="Mel's Fashion Style" 
-          className="absolute inset-0 w-full h-full object-cover"
+          alt="Contact Mel's Fashion" 
+          fill
+          priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-6 text-center">

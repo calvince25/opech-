@@ -34,18 +34,20 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
           
           {/* Left: Images */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="aspect-[4/5] bg-stone-100 overflow-hidden rounded-2xl group">
-              <img 
+            <div className="relative aspect-[4/5] bg-stone-100 overflow-hidden rounded-2xl group">
+              <Image 
                 src={product.image_url} 
                 alt={`${product.name} – Handcrafted Leather Handbag in Nairobi`} 
-                className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
+                fill
+                priority
+                className="object-cover transition-transform duration-[2s] group-hover:scale-105"
               />
             </div>
             {/* Gallery Placeholder - if multiple images existed in DB */}
             <div className="grid grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="aspect-square bg-stone-100 rounded-xl overflow-hidden opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
-                   <img src={product.image_url} alt="Detail" className="w-full h-full object-cover grayscale" />
+                <div key={i} className="relative aspect-square bg-stone-100 rounded-xl overflow-hidden opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
+                   <Image src={product.image_url} alt="Detail" fill className="object-cover grayscale" />
                 </div>
               ))}
             </div>
@@ -80,7 +82,9 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
             {/* M-Pesa Badge */}
             <div className="bg-white/50 border border-stone-200 rounded-2xl p-4 flex items-center justify-between mb-12">
               <div className="flex items-center gap-3">
-                <img src="https://img.icons8.com/color/48/m-pesa.png" alt="M-Pesa" className="h-6" />
+                <div className="relative w-12 h-6">
+                  <Image src="https://img.icons8.com/color/48/m-pesa.png" alt="M-Pesa" fill className="object-contain" />
+                </div>
                 <span className="text-[11px] font-bold uppercase tracking-widest text-stone-900">M-Pesa Express Checkout Available</span>
               </div>
               <ShieldCheck className="w-5 h-5 text-stone-300" />
