@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert, Menu } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { uploadFile } from '../lib/storage';
 import { Profile, BlogPost, Review, ContactMessage, Product, SiteSettings } from '../types';
@@ -19,6 +19,7 @@ export default function Admin() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -331,11 +332,31 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen flex bg-stone-50">
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Premium Dark Sidebar */}
-      <aside className="w-64 bg-stone-950 min-h-screen hidden md:flex flex-col fixed top-0 left-0 h-full z-40">
-        <div className="px-8 py-10 border-b border-white/5">
-          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.4em] mb-2">Mel's Fashion</p>
-          <p className="text-xl font-serif italic text-white lowercase">Maison d'Admin</p>
+      <aside className={`
+        w-64 bg-stone-950 min-h-screen flex flex-col fixed top-0 left-0 h-full z-40 transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0 md:flex
+      `}>
+        <div className="px-8 py-10 border-b border-white/5 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.4em] mb-2">Mel's Fashion</p>
+            <p className="text-xl font-serif italic text-white lowercase">Maison d'Admin</p>
+          </div>
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden p-2 text-stone-400 hover:text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
         <nav className="flex-1 py-8">
           {[
@@ -349,7 +370,10 @@ export default function Admin() {
           ].map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                setIsSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-4 px-8 py-4 text-xs font-bold transition-all uppercase tracking-widest ${
                 activeTab === item.id 
                   ? 'bg-white text-stone-950' 
@@ -372,7 +396,22 @@ export default function Admin() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-64 p-10 lg:p-16">
+      <main className="flex-1 md:ml-64 p-6 md:p-10 lg:p-16">
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center justify-between mb-8 pb-4 border-b border-stone-200">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-2 -ml-2 text-stone-600 hover:text-stone-900 transition-colors"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <p className="text-sm font-serif italic text-stone-900">Maison d'Admin</p>
+          </div>
+          <div className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+            <ShieldCheck className="w-4 h-4 text-stone-400" />
+          </div>
+        </div>
         <header className="flex items-center justify-between mb-12">
           <div>
             <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.3em] mb-2 block">Management</span>
