@@ -92,9 +92,11 @@ export default function Admin() {
   };
 
   // Handlers for Blog
-  const [showCreatePost, setShowCreatePost] = useState(false);
-  const [newPost, setNewPost] = useState({ 
+  const [showBlogModal, setShowBlogModal] = useState(false);
+  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+  const [blogForm, setBlogForm] = useState({ 
     title: '', 
+    slug: '',
     excerpt: '', 
     content: '', 
     image_url: '',
@@ -102,40 +104,55 @@ export default function Admin() {
     meta_description: ''
   });
 
-  const handleCreatePost = async (e: React.FormEvent) => {
+  const handleOpenBlogModal = (post?: BlogPost) => {
+    if (post) {
+      setEditingBlog(post);
+      setBlogForm({
+        title: post.title,
+        slug: post.slug || '',
+        excerpt: post.excerpt || '',
+        content: post.content || '',
+        image_url: post.image_url || '',
+        meta_title: post.meta_title || '',
+        meta_description: post.meta_description || ''
+      });
+    } else {
+      setEditingBlog(null);
+      setBlogForm({ title: '', slug: '', excerpt: '', content: '', image_url: '', meta_title: '', meta_description: '' });
+    }
+    setShowBlogModal(true);
+  };
+
+  const handleSaveBlog = async (e: React.FormEvent) => {
     e.preventDefault();
-    setActionLoading('create-post');
+    setActionLoading('save-blog');
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
       try {
-        const { error } = await supabase
-          .from('blog_posts')
-          .insert({
-            ...newPost,
-            author_id: user.id,
-            author_name: 'Mel\'s Fashion Admin'
-          });
+        const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        const data = { 
+          ...blogForm, 
+          slug, 
+          author_id: user.id,
+          author_name: 'Mel\'s Fashion Admin'
+        };
+
+        const { error } = editingBlog
+          ? await supabase.from('blog_posts').update(data).eq('id', editingBlog.id)
+          : await supabase.from('blog_posts').insert([data]);
         
         if (error) throw error;
         
-        alert('Post published successfully!');
-        setShowCreatePost(false);
-        setNewPost({ 
-          title: '', 
-          excerpt: '', 
-          content: '', 
-          image_url: '',
-          meta_title: '',
-          meta_description: ''
-        });
+        alert(editingBlog ? 'Post updated successfully!' : 'Post published successfully!');
+        setShowBlogModal(false);
         fetchData();
       } catch (err: any) {
-        alert('Failed to publish post: ' + (err.message || 'Unknown error'));
-        console.error('Publish error:', err);
+        alert('Error: ' + (err.message || 'Unknown error'));
+        console.error('Blog save error:', err);
       }
     } else {
-      alert('You must be logged in as an admin to publish posts.');
+      alert('You must be logged in as an admin.');
     }
     setActionLoading(null);
   };
@@ -452,9 +469,9 @@ export default function Admin() {
                 + Nouveau Produit
               </button>
             )}
-            {activeTab === 'blog' && !showCreatePost && (
-              <button onClick={() => setShowCreatePost(true)} className="px-8 py-3 bg-stone-900 text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all shadow-xl">
-                + Nouvelle Histoire
+            {activeTab === 'blog' && !showBlogModal && (
+              <button onClick={() => handleOpenBlogModal()} className="px-8 py-3 bg-stone-900 text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all shadow-xl">
+                + Nouveau Journal
               </button>
             )}
           </div>
@@ -727,159 +744,157 @@ export default function Admin() {
 
         {activeTab === 'blog' && (
           <div className="space-y-4">
-            {showCreatePost ? (
-              <div className="bg-white border border-stone-200 shadow-sm">
-                {/* WP-style post header */}
-                <div className="flex items-center justify-between px-6 py-3 border-b border-stone-200 bg-stone-50">
-                  <h3 className="text-sm font-bold text-stone-700">Add New Post</h3>
-                  <button onClick={() => setShowCreatePost(false)} className="text-stone-400 hover:text-stone-600">
-                    <X className="w-4 h-4" />
+            {showBlogModal ? (
+              <div className="bg-white border border-stone-200 shadow-sm rounded-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-8 py-6 border-b border-stone-100 bg-stone-50/50">
+                  <h3 className="text-xl font-serif font-bold text-stone-900">{editingProduct ? 'Update Journal' : 'Write New Story'}</h3>
+                  <button onClick={() => setShowBlogModal(false)} className="text-stone-400 hover:text-stone-600">
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
-                <form onSubmit={handleCreatePost} className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Main content */}
-                  <div className="lg:col-span-2 space-y-4">
-                    <div>
-                      <label className="block text-xs font-bold text-stone-600 mb-1 uppercase tracking-wider">Post Title *</label>
+                <form onSubmit={handleSaveBlog} className="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Title *</label>
                       <input 
                         required
-                        value={newPost.title}
-                        onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-                        className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-stone-500 focus:border-stone-500 outline-none"
+                        value={blogForm.title}
+                        onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
+                        className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none font-serif text-lg"
                         placeholder="Enter post title here"
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-stone-600 mb-1 uppercase tracking-wider">Excerpt *</label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Custom Slug (URL)</label>
+                        <input 
+                          value={blogForm.slug}
+                          onChange={(e) => setBlogForm({ ...blogForm, slug: e.target.value })}
+                          className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none font-mono text-xs"
+                          placeholder="auto-generated-from-title"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Featured Image URL *</label>
+                        <input 
+                          required
+                          value={blogForm.image_url}
+                          onChange={(e) => setBlogForm({ ...blogForm, image_url: e.target.value })}
+                          className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-xs"
+                          placeholder="https://images.unsplash.com/..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Excerpt (Short Summary) *</label>
                       <textarea 
                         required
-                        rows={2}
-                        value={newPost.excerpt}
-                        onChange={(e) => setNewPost({ ...newPost, excerpt: e.target.value })}
-                        className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-stone-500 outline-none resize-none"
+                        rows={3}
+                        value={blogForm.excerpt}
+                        onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })}
+                        className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-sm resize-none"
                         placeholder="Short summary shown in the blog listing..."
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-stone-600 mb-1 uppercase tracking-wider">Content *</label>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Content *</label>
                       <textarea 
                         required
-                        rows={12}
-                        value={newPost.content}
-                        onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
-                        className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-stone-500 outline-none resize-y"
-                        placeholder="Write your full story here..."
+                        rows={15}
+                        value={blogForm.content}
+                        onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                        className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-base font-serif leading-relaxed"
+                        placeholder="Write your beautiful story here..."
                       />
-                    </div>
-
-                    {/* SEO Section */}
-                    <div className="border border-stone-200 rounded">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-stone-50 border-b border-stone-200">
-                        <Search className="w-4 h-4 text-stone-500" />
-                        <span className="text-xs font-bold text-stone-600 uppercase tracking-wider">SEO Settings</span>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        <div>
-                          <label className="block text-xs font-bold text-stone-600 mb-1">SEO Title
-                            <span className="ml-2 text-xs font-normal text-stone-400 normal-case">(Leave blank to use Post Title)</span>
-                          </label>
-                          <input 
-                            value={newPost.meta_title}
-                            onChange={(e) => setNewPost({ ...newPost, meta_title: e.target.value })}
-                            className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. Premium Leather Clutch Bags Nairobi | Mel's Fashion"
-                            maxLength={60}
-                          />
-                          <p className="text-[10px] text-stone-400 mt-1">Recommended: 50–60 characters. Current: {newPost.meta_title.length}</p>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-bold text-stone-600 mb-1">Meta Description
-                            <span className="ml-2 text-xs font-normal text-stone-400 normal-case">(Shown in Google search results)</span>
-                          </label>
-                          <textarea 
-                            rows={3}
-                            value={newPost.meta_description}
-                            onChange={(e) => setNewPost({ ...newPost, meta_description: e.target.value })}
-                            className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-blue-500 outline-none resize-none"
-                            placeholder="e.g. Discover handcrafted premium leather handbags in Nairobi, Kenya. Mel's Fashion offers luxury clutches, totes, and crossbody bags for the modern Kenyan woman."
-                            maxLength={160}
-                          />
-                          <p className="text-[10px] text-stone-400 mt-1">Recommended: 150–160 characters. Current: {newPost.meta_description.length}</p>
-                        </div>
-                      </div>
                     </div>
                   </div>
 
-                  {/* Sidebar panel */}
-                  <div className="space-y-4">
-                    <div className="border border-stone-200 rounded">
-                      <div className="px-4 py-2 bg-stone-50 border-b border-stone-200">
-                        <span className="text-xs font-bold text-stone-600 uppercase tracking-wider">Publish</span>
+                  <div className="space-y-6">
+                    <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 space-y-6">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Star className="w-4 h-4 text-stone-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-stone-600">SEO Configuration</span>
                       </div>
-                      <div className="p-4 space-y-3">
-                        <div className="flex items-center justify-between text-xs text-stone-500">
-                          <span>Status:</span>
-                          <span className="font-bold text-green-600">Published</span>
+                      
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Meta Title</label>
+                          <input 
+                            value={blogForm.meta_title}
+                            onChange={(e) => setBlogForm({ ...blogForm, meta_title: e.target.value })}
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs"
+                            placeholder="SEO Optimized Title"
+                          />
                         </div>
-                        <div className="flex items-center justify-between text-xs text-stone-500">
-                          <span>Author:</span>
-                          <span className="font-bold">Mel's Fashion Admin</span>
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Meta Description</label>
+                          <textarea 
+                            rows={4}
+                            value={blogForm.meta_description}
+                            onChange={(e) => setBlogForm({ ...blogForm, meta_description: e.target.value })}
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs resize-none"
+                            placeholder="SEO Optimized Description (approx 160 chars)"
+                          />
                         </div>
-                        <div className="pt-2 flex gap-2">
-                          <button type="button" onClick={() => setShowCreatePost(false)} className="flex-1 px-3 py-2 text-xs font-bold border border-stone-300 text-stone-600 rounded hover:bg-stone-50 transition-colors">
-                            Cancel
-                          </button>
-                          <button type="submit" disabled={actionLoading === 'create-post'} className="flex-1 px-3 py-2 text-xs font-bold bg-[#1d2327] text-white rounded hover:bg-[#2c3338] transition-colors disabled:opacity-50 flex items-center justify-center gap-1">
-                            {actionLoading === 'create-post' ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Publish Post'}
-                          </button>
-                        </div>
+                      </div>
+
+                      <div className="pt-6 border-t border-stone-200 flex flex-col gap-3">
+                        <button type="submit" disabled={!!actionLoading} className="w-full py-4 bg-stone-950 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] shadow-lg hover:shadow-2xl transition-all flex items-center justify-center gap-2">
+                          {actionLoading === 'save-blog' ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : (editingBlog ? 'Update Story' : 'Publish Story')}
+                        </button>
+                        <button type="button" onClick={() => setShowBlogModal(false)} className="w-full py-3 text-stone-400 font-bold uppercase tracking-widest text-[10px] hover:text-stone-900 transition-colors">
+                          Cancel
+                        </button>
                       </div>
                     </div>
 
-                    <div className="border border-stone-200 rounded">
-                      <div className="px-4 py-2 bg-stone-50 border-b border-stone-200">
-                        <span className="text-xs font-bold text-stone-600 uppercase tracking-wider">Featured Image</span>
+                    {blogForm.image_url && (
+                      <div className="rounded-2xl overflow-hidden shadow-xl aspect-video relative">
+                        <img src={blogForm.image_url} alt="Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        <span className="absolute bottom-4 left-4 text-white text-[10px] font-bold uppercase tracking-widest opacity-80">Cover Preview</span>
                       </div>
-                      <div className="p-4">
-                        <input 
-                          value={newPost.image_url}
-                          onChange={(e) => setNewPost({ ...newPost, image_url: e.target.value })}
-                          className="w-full px-3 py-2 text-sm bg-white border border-stone-300 rounded focus:ring-1 focus:ring-stone-500 outline-none"
-                          placeholder="https://... image URL"
-                        />
-                        {newPost.image_url && (
-                          <img src={newPost.image_url} alt="preview" className="mt-2 w-full aspect-video object-cover rounded" />
-                        )}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </form>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-stone-100 flex items-center justify-between">
-                  <h3 className="font-serif font-bold">Blog Management</h3>
-                  <button onClick={() => setShowCreatePost(true)} className="text-stone-900 text-sm font-bold flex items-center gap-2 hover:opacity-70 transition-opacity">
-                    <Plus className="w-4 h-4" /> Create Post
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                <div className="px-8 py-6 border-b border-stone-100 flex items-center justify-between">
+                  <h3 className="font-serif font-bold text-stone-900">Journal Management</h3>
+                  <button onClick={() => handleOpenBlogModal()} className="text-stone-900 text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <Plus className="w-4 h-4" /> Add New Story
                   </button>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
                     <thead className="bg-stone-50 text-stone-500 font-medium">
                       <tr>
-                        <th className="px-6 py-4">Title</th>
-                        <th className="px-6 py-4">Date</th>
-                        <th className="px-6 py-4">Actions</th>
+                        <th className="px-8 py-4">Title</th>
+                        <th className="px-8 py-4">Slug</th>
+                        <th className="px-8 py-4">Status</th>
+                        <th className="px-8 py-4">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-stone-100">
                       {blogPosts.map((post) => (
-                        <tr key={post.id} className="hover:bg-stone-50 transition-colors">
-                          <td className="px-6 py-4 font-medium">{post.title}</td>
-                          <td className="px-6 py-4">{new Date(post.created_at).toLocaleDateString()}</td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <button onClick={() => handleDeletePost(post.id)} disabled={actionLoading === post.id} className="text-red-400 hover:text-red-600 disabled:opacity-50">
+                        <tr key={post.id} className="hover:bg-stone-50 transition-colors group">
+                          <td className="px-8 py-4 font-serif font-medium text-stone-900">{post.title}</td>
+                          <td className="px-8 py-4 font-mono text-xs text-stone-400">/{post.slug}</td>
+                          <td className="px-8 py-4">
+                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-100 text-emerald-700">
+                                <div className="w-1 h-1 rounded-full bg-emerald-500" /> Published
+                             </span>
+                          </td>
+                          <td className="px-8 py-4">
+                            <div className="flex items-center gap-4">
+                              <button onClick={() => handleOpenBlogModal(post)} className="text-stone-400 hover:text-stone-950 transition-colors">
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button onClick={() => handleDeletePost(post.id)} disabled={actionLoading === post.id} className="text-stone-400 hover:text-red-600 transition-colors disabled:opacity-50">
                                 {actionLoading === post.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                               </button>
                             </div>
