@@ -53,12 +53,10 @@ export default async function BlogPostPage({ params }: Props) {
         
         {/* Article Hero */}
         <div className="w-full h-[60vh] relative overflow-hidden">
-          <Image 
+          <img 
             src={post.image_url || 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=2000'} 
             alt={post.title} 
-            fill
-            priority
-            className="object-cover"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-stone-900/20"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#F5F2EB] via-transparent to-stone-900/10"></div>
