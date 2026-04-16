@@ -19,10 +19,11 @@ export default function AboutPage() {
       
       <div className="relative w-full h-[60vh] min-h-[500px]">
         <Image 
-          src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=2000" 
+          src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=1200" 
           alt="About Mel's Fashion" 
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
@@ -50,11 +51,13 @@ export default function AboutPage() {
                         Our workshop in Kilimani is a space of creativity where seasoned artisans mentor the next generation. We source only the finest full-grain leather from sustainable tanneries across East Africa, ensuring that every piece supports the local ecosystem.
                     </p>
                 </div>
-                <div className="aspect-[4/5] bg-stone-100 rounded-3xl overflow-hidden shadow-2xl">
-                    <img 
-                        src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1000" 
+                <div className="relative aspect-[4/5] bg-stone-100 rounded-3xl overflow-hidden shadow-2xl">
+                    <Image 
+                        src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800" 
                         alt="Mel's Fashion Workshop in Nairobi" 
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
                     />
                 </div>
             </div>

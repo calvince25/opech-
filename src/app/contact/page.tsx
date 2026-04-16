@@ -19,10 +19,11 @@ export default function ContactPage() {
       
       <div className="relative w-full h-[60vh] min-h-[500px]">
         <Image 
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000" 
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1200" 
           alt="Contact Mel's Fashion" 
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>

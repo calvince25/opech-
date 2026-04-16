@@ -398,7 +398,7 @@ export default function Admin() {
       {/* Main Content */}
       <main className="flex-1 md:ml-64 p-6 md:p-10 lg:p-16">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between mb-8 pb-4 border-b border-stone-200">
+        <div className="md:hidden flex items-center justify-between mb-4 pb-4 border-b border-stone-200">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setIsSidebarOpen(true)}
@@ -412,7 +412,33 @@ export default function Admin() {
             <ShieldCheck className="w-4 h-4 text-stone-400" />
           </div>
         </div>
-        <header className="flex items-center justify-between mb-12">
+
+        {/* New: Mobile Horizontal One-Click Navigation */}
+        <div className="md:hidden flex overflow-x-auto gap-2 pb-6 no-scrollbar -mx-2 px-2 scroll-smooth">
+          {[
+            { id: 'dashboard', label: 'Dash', icon: LayoutDashboard },
+            { id: 'products', label: 'Inv', icon: Package },
+            { id: 'blog', label: 'Journal', icon: FileText },
+            { id: 'reviews', label: 'Stars', icon: Star },
+            { id: 'messages', label: 'Inbox', icon: Mail },
+            { id: 'customers', label: 'Users', icon: Users },
+            { id: 'settings', label: 'Tools', icon: Settings },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`flex-shrink-0 flex flex-col items-center justify-center gap-1.5 px-6 py-4 rounded-2xl transition-all border ${
+                activeTab === item.id 
+                  ? 'bg-stone-950 text-white border-stone-950 shadow-lg' 
+                  : 'bg-white text-stone-500 border-stone-100 hover:border-stone-200'
+              }`}
+            >
+              <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-white' : 'text-stone-400'}`} />
+              <span className="text-[10px] font-bold uppercase tracking-tight">{item.label}</span>
+            </button>
+          ))}
+        </div>
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.3em] mb-2 block">Management</span>
             <h1 className="text-4xl lg:text-5xl font-serif text-stone-900 capitalize italic lowercase">
@@ -437,18 +463,18 @@ export default function Admin() {
         {activeTab === 'dashboard' && (
           <div className="space-y-12">
             {/* Elegant Stat Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {stats.map((stat) => (
                 <button 
                   key={stat.label} 
                   onClick={() => setActiveTab(stat.tab)}
-                  className="group bg-white p-8 rounded-3xl border border-stone-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all text-left"
+                  className="group bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl border border-stone-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all text-left"
                 >
-                  <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110`}>
-                    <stat.icon className="w-6 h-6" />
+                  <div className={`w-10 h-10 md:w-12 md:h-12 ${stat.bg} ${stat.color} rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 transition-transform group-hover:scale-110`}>
+                    <stat.icon className="w-5 h-5 md:w-6 md:h-6" />
                   </div>
-                  <p className="text-[10px] text-stone-400 font-bold uppercase tracking-[0.2em] mb-2">{stat.label}</p>
-                  <p className="text-3xl font-serif text-stone-900 tracking-tight">{stat.value}</p>
+                  <p className="text-[9px] md:text-[10px] text-stone-400 font-bold uppercase tracking-[0.2em] mb-1 md:mb-2">{stat.label}</p>
+                  <p className="text-xl md:text-3xl font-serif text-stone-900 tracking-tight">{stat.value}</p>
                 </button>
               ))}
             </div>
