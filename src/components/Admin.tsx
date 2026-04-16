@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert, Menu } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert, Menu, Bold, Heading2, Heading3, List, Link2, Type } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { uploadFile } from '../lib/storage';
 import { Profile, BlogPost, Review, ContactMessage, Product, SiteSettings } from '../types';
@@ -20,6 +20,7 @@ export default function Admin() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const blogContentRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     fetchData();
@@ -103,6 +104,35 @@ export default function Admin() {
     meta_title: '',
     meta_description: ''
   });
+
+  const insertFormatting = (tag: string, endTag?: string) => {
+    const textarea = blogContentRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = blogForm.content;
+    const selection = text.substring(start, end);
+    
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+    
+    const tagToUse = tag;
+    const closingTag = endTag || tag.replace('<', '</');
+    
+    const newContent = `${before}${tagToUse}${selection}${closingTag}${after}`;
+    
+    setBlogForm({ ...blogForm, content: newContent });
+    
+    // Reset focus and selection
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(
+        start + tagToUse.length,
+        end + tagToUse.length
+      );
+    }, 0);
+  };
 
   const handleOpenBlogModal = (post?: BlogPost) => {
     if (post) {
@@ -794,15 +824,71 @@ export default function Admin() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Content *</label>
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Post Content *</label>
+                        <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg">
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<h2>', '</h2>')}
+                            title="Sub-heading (H2)"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <Heading2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<h3>', '</h3>')}
+                            title="Small Heading (H3)"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <Heading3 className="w-3.5 h-3.5" />
+                          </button>
+                          <div className="w-px h-3 bg-stone-200 mx-1" />
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<b>', '</b>')}
+                            title="Bold"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <Bold className="w-3.5 h-3.5" />
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<ul>\n  <li>', '</li>\n</ul>')}
+                            title="Bullet List"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <List className="w-3.5 h-3.5" />
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<a href="#" target="_blank">', '</a>')}
+                            title="Insert Link"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <Link2 className="w-3.5 h-3.5" />
+                          </button>
+                          <div className="w-px h-3 bg-stone-200 mx-1" />
+                          <button 
+                            type="button"
+                            onClick={() => insertFormatting('<p>', '</p>')}
+                            title="Paragraph"
+                            className="p-1.5 hover:bg-white rounded transition-colors text-stone-600 hover:text-stone-950"
+                          >
+                            <Type className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
                       <textarea 
                         required
+                        ref={blogContentRef}
                         rows={15}
                         value={blogForm.content}
                         onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
                         className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-base font-serif leading-relaxed"
-                        placeholder="Write your beautiful story here..."
+                        placeholder="Write your beautiful story here... Use the toolbar above to add structure."
                       />
+                      <p className="text-[10px] text-stone-400 italic">Pro Tip: Use Headings (H2/H3) to separate your story into professional segments.</p>
                     </div>
                   </div>
 
