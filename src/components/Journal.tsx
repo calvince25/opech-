@@ -99,11 +99,10 @@ const Journal: React.FC<JournalProps> = ({ fullPage = false }) => {
                     className="flex flex-col"
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden mb-8 bg-stone-100 rounded-xl">
-                      <Image 
+                      <img 
                         src={article.image_url || 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=1000'}
                         alt={article.title} 
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[0.2] group-hover:grayscale-0"
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[0.2] group-hover:grayscale-0"
                         loading="lazy"
                       />
                     </div>

@@ -605,17 +605,11 @@ export default function Admin() {
                       <select 
                         value={productForm.category}
                         onChange={(e) => setProductForm({ ...productForm, category: e.target.value as any })}
-                        className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none"
+                        className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-sm font-bold uppercase tracking-widest"
                       >
-                        <option value="Totes">Totes</option>
-                        <option value="Shoulder bags">Shoulder bags</option>
-                        <option value="Heels">Heels</option>
-                        <option value="Charms">Charms</option>
-                        <option value="Clutches">Clutches</option>
-                        <option value="Satchels">Satchels</option>
-                        <option value="Crossbody">Crossbody</option>
-                        <option value="Bucket">Bucket</option>
-                        <option value="Weekender">Weekender</option>
+                        {['All', 'Heels', 'Charms', 'Shoulder bags', 'Wallets', 'Leather Handbags', 'Crossbody Bags', 'Tote Bags', 'Clutch Bags', 'Totes', 'Clutches', 'Satchels', 'Crossbody', 'Bucket', 'Weekender', 'New Arrival', 'Sale', 'New Arrivals'].map(cat => (
+                          <option key={cat} value={cat}>{cat}</option>
+                        ))}
                       </select>
                     </div>
                   <div className="space-y-4">
@@ -865,9 +859,14 @@ export default function Admin() {
               <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
                 <div className="px-8 py-6 border-b border-stone-100 flex items-center justify-between">
                   <h3 className="font-serif font-bold text-stone-900">Journal Management</h3>
-                  <button onClick={() => handleOpenBlogModal()} className="text-stone-900 text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
-                    <Plus className="w-4 h-4" /> Add New Story
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <button onClick={fetchData} className="p-2 text-stone-400 hover:text-stone-900 transition-colors" title="Refresh list">
+                      <TrendingUp className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => handleOpenBlogModal()} className="text-stone-900 text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
+                      <Plus className="w-4 h-4" /> Add New Story
+                    </button>
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
@@ -880,27 +879,36 @@ export default function Admin() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-stone-100">
-                      {blogPosts.map((post) => (
-                        <tr key={post.id} className="hover:bg-stone-50 transition-colors group">
-                          <td className="px-8 py-4 font-serif font-medium text-stone-900">{post.title}</td>
-                          <td className="px-8 py-4 font-mono text-xs text-stone-400">/{post.slug}</td>
-                          <td className="px-8 py-4">
-                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-100 text-emerald-700">
-                                <div className="w-1 h-1 rounded-full bg-emerald-500" /> Published
-                             </span>
-                          </td>
-                          <td className="px-8 py-4">
-                            <div className="flex items-center gap-4">
-                              <button onClick={() => handleOpenBlogModal(post)} className="text-stone-400 hover:text-stone-950 transition-colors">
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <button onClick={() => handleDeletePost(post.id)} disabled={actionLoading === post.id} className="text-stone-400 hover:text-red-600 transition-colors disabled:opacity-50">
-                                {actionLoading === post.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                              </button>
-                            </div>
+                      {blogPosts.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="px-8 py-20 text-center">
+                            <FileText className="w-8 h-8 text-stone-200 mx-auto mb-4" />
+                            <p className="text-stone-400 font-serif italic">No stories found. Create your first story to see it here.</p>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        blogPosts.map((post) => (
+                          <tr key={post.id} className="hover:bg-stone-50 transition-colors group">
+                            <td className="px-8 py-4 font-serif font-medium text-stone-900">{post.title}</td>
+                            <td className="px-8 py-4 font-mono text-xs text-stone-400">/{post.slug}</td>
+                            <td className="px-8 py-4">
+                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-100 text-emerald-700">
+                                  <div className="w-1 h-1 rounded-full bg-emerald-500" /> Published
+                               </span>
+                            </td>
+                            <td className="px-8 py-4">
+                              <div className="flex items-center gap-4">
+                                <button onClick={() => handleOpenBlogModal(post)} className="text-stone-400 hover:text-stone-950 transition-colors">
+                                  <Edit2 className="w-4 h-4" />
+                                </button>
+                                <button onClick={() => handleDeletePost(post.id)} disabled={actionLoading === post.id} className="text-stone-400 hover:text-red-600 transition-colors disabled:opacity-50">
+                                  {actionLoading === post.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>

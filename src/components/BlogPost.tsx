@@ -41,12 +41,10 @@ export default function BlogPostDetail({ post, onBack }: BlogPostProps) {
             {post.title}
           </h1>
           <div className="relative aspect-[21/9] bg-[#EBE7DE] overflow-hidden rounded-2xl">
-            <Image 
+            <img 
               src={post.image_url} 
               alt={post.title} 
-              fill
-              priority
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
         </header>

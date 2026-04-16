@@ -12,7 +12,7 @@ export interface Product {
   description: string;
   long_description?: string;
   price: number;
-  category: 'All' | 'Totes' | 'Shoulder bags' | 'Heels' | 'Charms' | 'Clutches' | 'Satchels' | 'Crossbody' | 'Bucket' | 'Weekender' | 'New Arrival';
+  category: 'All' | 'Totes' | 'Shoulder bags' | 'Heels' | 'Charms' | 'Clutches' | 'Satchels' | 'Crossbody' | 'Bucket' | 'Weekender' | 'New Arrival' | 'Wallets' | 'Leather Handbags' | 'Crossbody Bags' | 'Tote Bags' | 'Clutch Bags' | 'Sale' | 'New Arrivals';
   image_url: string;
   gallery?: string[];
   features: string[];
