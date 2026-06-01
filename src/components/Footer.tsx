@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import Image from 'next/image';
+
 import { BRAND_NAME } from '../constants';
 
 export default function Footer() {
@@ -35,14 +35,10 @@ export default function Footer() {
       <div className="max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 lg:gap-24">
 
         <div className="md:col-span-4">
-          <Link href="/" className="mb-8 block transition-transform hover:scale-105 duration-300">
-            <Image 
-              src="/logo.jpg" 
-              alt={BRAND_NAME} 
-              width={80} 
-              height={80} 
-              className="rounded-full shadow-lg border border-stone-100"
-            />
+          <Link href="/" className="mb-8 block">
+            <span className="font-serif text-2xl text-stone-900 tracking-widest hover:opacity-70 transition-opacity">
+              Mel&rsquo;s Fashion
+            </span>
           </Link>
           <p className="max-w-xs font-light leading-relaxed mb-8 italic">
             Handcrafted excellence from the heart of Nairobi. 
