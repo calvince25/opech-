@@ -27,6 +27,20 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: '/favicon/favicon-16x16.png?v=2', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon/favicon-32x32.png?v=2', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon/favicon-48x48.png?v=2', sizes: '48x48', type: 'image/png' },
+      { url: '/favicon/favicon.ico?v=2', type: 'image/x-icon' },
+    ],
+    apple: [
+      { url: '/favicon/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      { rel: 'manifest', url: '/favicon/site.webmanifest' },
+    ],
+  },
   openGraph: {
     title: "Mel's Fashion | Premium Handcrafted Handbags",
     description: "The home of premium handbags in Kenya. Handcrafted in Nairobi with artisanal excellence.",
@@ -56,7 +70,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png?v=2" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png?v=2" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/favicon/favicon-48x48.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=2" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="antialiased font-sans">
         <AuthProvider>
