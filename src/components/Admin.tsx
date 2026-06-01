@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert, Menu, Bold, Heading2, Heading3, List, Link2, Type } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, Settings, Plus, Search, MoreVertical, TrendingUp, Package, DollarSign, Star, FileText, Check, X, Loader2, Mail, Trash2, Edit2, Shield, ShieldCheck, ShieldAlert, Menu, Bold, Heading2, Heading3, List, Link2, Type, Printer, Download } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { uploadFile } from '../lib/storage';
 import { Profile, BlogPost, Review, ContactMessage, Product, SiteSettings } from '../types';
@@ -1384,6 +1384,119 @@ export default function Admin() {
                 </button>
               </div>
             </form>
+
+            {/* Google Review Print Insert Toolkit */}
+            <div className="mt-12 border-t border-stone-200 pt-12">
+              <style dangerouslySetInnerHTML={{ __html: `
+                @media print {
+                  body * {
+                    visibility: hidden;
+                  }
+                  #review-insert-card, #review-insert-card * {
+                    visibility: visible;
+                  }
+                  #review-insert-card {
+                    position: absolute;
+                    left: 50% !important;
+                    top: 10% !important;
+                    transform: translateX(-50%) !important;
+                    width: 400px !important;
+                    border: 2px dashed #1c1917 !important;
+                    box-shadow: none !important;
+                  }
+                }
+              `}} />
+
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-stone-100 rounded-lg">
+                  <Star className="w-6 h-6 text-stone-600 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-serif font-bold">Packaging & Review QR Toolkit</h3>
+                  <p className="text-stone-500 text-sm">Download or print premium review prompts for customer packaging inserts</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div className="space-y-6">
+                  <div className="bg-stone-50 border border-stone-200 rounded-xl p-6 space-y-4">
+                    <h4 className="font-serif font-bold text-stone-900">How to use this Toolkit</h4>
+                    <p className="text-stone-600 text-sm leading-relaxed">
+                      To boost customer reviews and improve your AI visibility/local search SEO, place high-quality physical insert cards in every customer bag or package.
+                    </p>
+                    <ul className="space-y-2 text-stone-600 text-sm pl-4 list-disc">
+                      <li>Print the pre-formatted cards below on premium thick textured paper.</li>
+                      <li>Punch a small hole and tie with leather twine to bag straps.</li>
+                      <li>Slip them inside internal pockets as a premium thank-you note.</li>
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-wrap gap-4">
+                    <button 
+                      type="button"
+                      onClick={() => window.print()}
+                      className="px-6 py-3 bg-stone-900 text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-stone-800 transition-all flex items-center gap-2"
+                    >
+                      <Printer className="w-4 h-4" />
+                      Print Card Insert
+                    </button>
+                    <a 
+                      href="/google-review-qr.png" 
+                      download="mel-fashion-google-review-qr.png"
+                      className="px-6 py-3 bg-white border border-stone-200 text-stone-800 rounded-lg text-sm font-bold uppercase tracking-widest hover:bg-stone-50 transition-all flex items-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download QR Code
+                    </a>
+                  </div>
+                </div>
+
+                {/* Printable card preview */}
+                <div id="review-insert-card" className="bg-white border-2 border-stone-800 rounded-xl p-8 max-w-sm mx-auto shadow-md relative overflow-hidden font-serif select-none">
+                  {/* Decorative leather border */}
+                  <div className="absolute inset-2 border border-dashed border-stone-300 pointer-events-none rounded-lg" />
+                  
+                  <div className="text-center space-y-6 relative z-10 py-2">
+                    <div className="font-serif text-xs tracking-widest uppercase text-stone-500">
+                      Mel&apos;s Fashion
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-stone-900 leading-tight">
+                      Thank You for supporting local Kenyan craftsmanship!
+                    </h3>
+                    
+                    <p className="font-sans text-[11px] text-stone-600 leading-relaxed max-w-xs mx-auto">
+                      Each piece is meticulously handcrafted in Nairobi using premium local leather. Your feedback helps us support more local artisans.
+                    </p>
+
+                    <div className="flex justify-center my-4">
+                      <div className="p-3 bg-stone-50 border border-stone-200 rounded-xl shadow-sm">
+                        <img 
+                          src="/google-review-qr.png" 
+                          alt="Google Review QR Code" 
+                          className="w-32 h-32 object-contain"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-xs uppercase tracking-widest font-bold font-sans text-stone-800">
+                        Scan to share your feedback
+                      </p>
+                      <p className="text-[10px] text-stone-400 font-sans">
+                        Let others know about your experience
+                      </p>
+                    </div>
+
+                    <div className="flex justify-center gap-1 text-amber-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3 h-3 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </main>

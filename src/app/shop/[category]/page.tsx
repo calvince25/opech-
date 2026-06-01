@@ -1,8 +1,11 @@
 import React from 'react';
 import { Metadata, ResolvingMetadata } from 'next';
+import Link from 'next/link';
 import ProductGrid from '@/components/ProductGrid';
 import StructuredData from '@/components/SEO/StructuredData';
 import { notFound } from 'next/navigation';
+import { FALLBACK_ARTICLES } from '@/lib/knowledgeHubData';
+import { BookOpen, ArrowRight } from 'lucide-react';
 
 interface Props {
   params: { category: string };
@@ -93,7 +96,75 @@ export default async function CategoryPage({ params }: Props) {
           but ProductGrid currently handles its own filtering.
           I'll modify ProductGrid to accept an initialCategory prop. */}
       <ProductGrid initialCategory={categoryData.name} />
-      
+
+      {/* Helpful Buying Guides — Context-Specific Internal SEO Links */}
+      {(() => {
+        let categoryGuides = FALLBACK_ARTICLES.filter(a => a.category === 'buying-guides');
+        if (slug === 'leather-handbags') {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.slug === 'how-to-choose-the-perfect-handbag' || a.slug === 'leather-bag-buying-guide' || a.slug === 'best-leather-bags-for-women');
+        } else if (slug === 'crossbody-bags') {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.slug === 'matching-handbags-to-outfits' || a.slug === 'luxury-handbag-styling-guide' || a.slug === 'handbag-trends-in-kenya');
+        } else if (slug === 'tote-bags') {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.slug === 'best-work-bags-for-professionals' || a.slug === 'best-travel-bags' || a.slug === 'how-long-leather-bags-last');
+        } else if (slug === 'clutch-bags') {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.slug === 'luxury-handbag-styling-guide' || a.slug === 'matching-handbags-to-outfits' || a.slug === 'types-of-leather-explained');
+        } else {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.slug === 'why-kenyan-leather-is-unique' || a.slug === 'how-to-choose-the-perfect-handbag' || a.slug === 'best-leather-bags-for-women');
+        }
+
+        if (categoryGuides.length < 3) {
+          categoryGuides = FALLBACK_ARTICLES.filter(a => a.category === 'buying-guides').slice(0, 3);
+        } else {
+          categoryGuides = categoryGuides.slice(0, 3);
+        }
+
+        return (
+          <div className="bg-[#F5F2EB] pb-24 px-6">
+            <div className="max-w-[1800px] mx-auto">
+              <div className="border-t border-stone-200 pt-20">
+                <div className="flex items-center justify-between mb-12 flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <BookOpen className="w-5 h-5 text-stone-400" />
+                    <h2 className="text-3xl font-serif text-stone-900">Recommended for {categoryData.name}</h2>
+                  </div>
+                  <Link
+                    href={`/knowledge-hub?category=${slug === 'leather-handbags' || slug === 'crossbody-bags' || slug === 'tote-bags' || slug === 'clutch-bags' ? 'buying-guides' : 'all'}`}
+                    className="text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors"
+                  >
+                    View All Guides →
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {categoryGuides.map(guide => (
+                    <Link
+                      key={guide.id}
+                      href={`/knowledge-hub/${guide.slug}`}
+                      className="group bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-all"
+                    >
+                      <div className="aspect-[16/10] bg-stone-100 overflow-hidden">
+                        <img
+                          src={guide.image_url}
+                          alt={guide.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="p-6 space-y-3">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 block">{guide.read_time} read</span>
+                        <h3 className="font-serif text-lg text-stone-900 group-hover:text-stone-600 transition-colors leading-snug">{guide.title}</h3>
+                        <p className="text-stone-500 text-sm line-clamp-2">{guide.excerpt}</p>
+                        <div className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-stone-800 group-hover:text-stone-500 transition-colors pt-2">
+                          Read Guide <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </>
   );
 }

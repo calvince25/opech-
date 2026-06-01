@@ -1,267 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { FALLBACK_ARTICLES, KnowledgeHubArticle } from '@/lib/knowledgeHubData';
 import KnowledgeHubCategoryBrowser from '@/components/KnowledgeHub';
-import { ArrowRight, BookOpen, Clock, Tag } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, Tag, Search } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
-interface Article {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  category: string;
-  created_at: string;
-  image_url: string;
-  author_name: string;
-  read_time?: string;
-}
+function KnowledgeHubContent() {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get('category') || 'all';
 
-const FALLBACK_ARTICLES: Article[] = [
-  // Leather Education
-  {
-    id: 'kh-1',
-    title: 'Ultimate Guide To Genuine Leather Bags In Kenya',
-    slug: 'ultimate-guide-to-leather-bags-in-kenya',
-    excerpt: 'Deep dive into full-grain vs top-grain leather quality, ethical sourcing practices, and local master craftsmanship in Nairobi.',
-    category: 'leather-education',
-    created_at: '2026-05-15',
-    image_url: 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '12 min'
-  },
-  {
-    id: 'kh-2',
-    title: 'How To Identify Genuine Leather Products Instantly',
-    slug: 'how-to-identify-genuine-leather-products',
-    excerpt: 'Avoid low-quality faux and synthetic options with our definitive five-step physical inspection guide for luxury shoppers.',
-    category: 'leather-education',
-    created_at: '2026-05-10',
-    image_url: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '8 min'
-  },
-  {
-    id: 'kh-3',
-    title: 'The Tanning Spectrum: Vegetable, Chrome & Eco-Conscious Leather',
-    slug: 'tanning-spectrum-vegetable-chrome-eco-leather',
-    excerpt: 'An educational overview of tanning chemistry, leather environmental impacts, and why organic methods produce superior accessories.',
-    category: 'leather-education',
-    created_at: '2026-04-28',
-    image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '7 min'
-  },
-  {
-    id: 'kh-4',
-    title: 'Full-Grain vs Top-Grain: Deciphering Luxury Leather Grades',
-    slug: 'full-grain-vs-top-grain-leather-grades',
-    excerpt: 'Demystifying industry jargon. Discover why full-grain leather is the ultimate investment for durable luxury accessories.',
-    category: 'leather-education',
-    created_at: '2026-04-12',
-    image_url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '6 min'
-  },
-  {
-    id: 'kh-5',
-    title: 'Bovine vs Exotic Hides: Selection Criteria for Master Leatherwork',
-    slug: 'bovine-vs-exotic-hides-selection-criteria',
-    excerpt: 'Explore the texture, grain patterns, and ethical challenges behind different animal hides used in the premium fashion industry.',
-    category: 'leather-education',
-    created_at: '2026-03-24',
-    image_url: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '9 min'
-  },
-
-  // Leather Care
-  {
-    id: 'kh-6',
-    title: 'Complete Leather Care Guide For Kenyan Women',
-    slug: 'complete-leather-care-guide-for-kenyan-women',
-    excerpt: 'Protect your luxury bags from humidity, heat, and seasonal weather with our specialized tropical care system.',
-    category: 'leather-care',
-    created_at: '2026-05-18',
-    image_url: 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '10 min'
-  },
-  {
-    id: 'kh-7',
-    title: 'How To Safely Clean & Condition Premium Luxury Leather',
-    slug: 'how-to-clean-condition-premium-leather',
-    excerpt: 'Remove everyday stains, dust, and minor grease without stripping natural moisture or damaging organic protective finishes.',
-    category: 'leather-care',
-    created_at: '2026-05-02',
-    image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '6 min'
-  },
-  {
-    id: 'kh-8',
-    title: 'Seasonal Leather Storage: Shielding Handbags from Nairobi Humidity',
-    slug: 'seasonal-leather-storage-humidity-shield',
-    excerpt: 'Maintain optimal handbag structure and prevent mold development during high-moisture rainy seasons with simple home methods.',
-    category: 'leather-care',
-    created_at: '2026-04-15',
-    image_url: 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '5 min'
-  },
-  {
-    id: 'kh-9',
-    title: 'Restoring Scratch Damaged Full-Grain Leather Bags Safely',
-    slug: 'restoring-scratches-full-grain-leather-bags',
-    excerpt: 'Easy home remedies using clean microfiber cloths, soft leather balms, and natural oils to gently buff away surface scratches.',
-    category: 'leather-care',
-    created_at: '2026-03-30',
-    image_url: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '5 min'
-  },
-  {
-    id: 'kh-10',
-    title: 'Why Waterproofing Sprays Can Damage Premium Aniline Leather',
-    slug: 'why-waterproofing-sprays-damage-aniline-leather',
-    excerpt: 'Understand leather breathability and learn why silicon-based aerosol sealants do more harm than good to premium open-pore surfaces.',
-    category: 'leather-care',
-    created_at: '2026-03-05',
-    image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '7 min'
-  },
-
-  // Buying Guides
-  {
-    id: 'kh-11',
-    title: 'Luxury Handbag Buying Guide: The Timeless Smart Investment',
-    slug: 'luxury-handbag-buying-guide',
-    excerpt: 'Step-by-step framework to evaluate weight, capacity, hardware durability, and classic design versatility before buying.',
-    category: 'buying-guides',
-    created_at: '2026-05-22',
-    image_url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '9 min'
-  },
-  {
-    id: 'kh-12',
-    title: 'The Perfect Corporate Tote: Work Bag Selection Criteria',
-    slug: 'perfect-corporate-tote-selection-criteria',
-    excerpt: 'Ditch basic designs. Learn how to select a premium work bag that balances heavy duty laptop utility with boardroom-ready style.',
-    category: 'buying-guides',
-    created_at: '2026-05-05',
-    image_url: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '7 min'
-  },
-  {
-    id: 'kh-13',
-    title: 'Clutch vs Crossbody: Selecting the Ideal Occasion Handbag',
-    slug: 'clutch-vs-crossbody-selecting-occasion-handbag',
-    excerpt: 'A styling match guide to choosing between compact evening statement clutches and ultra-versatile weekend crossbody bags.',
-    category: 'buying-guides',
-    created_at: '2026-04-20',
-    image_url: 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '6 min'
-  },
-  {
-    id: 'kh-14',
-    title: 'Five Critical Questions To Ask A Premium Leather Vendor',
-    slug: 'five-questions-to-ask-leather-vendor',
-    excerpt: 'Equip yourself for premium shopping. Understand tanning methods, stitch reinforcement, and hide origins to verify product value.',
-    category: 'buying-guides',
-    created_at: '2026-03-18',
-    image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '6 min'
-  },
-  {
-    id: 'kh-15',
-    title: 'Investing in Custom Leather: Costs, Timelines & Bespoke Value',
-    slug: 'investing-in-custom-leather-bespoke-value',
-    excerpt: 'Understand what goes into crafting a tailor-made handbag personalized specifically to your structural requirements in Nairobi.',
-    category: 'buying-guides',
-    created_at: '2026-02-28',
-    image_url: 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '8 min'
-  },
-
-  // Fashion & Styling
-  {
-    id: 'kh-16',
-    title: 'Coordinating Premium Handbags with Contemporary Corporate Attire',
-    slug: 'coordinating-handbags-with-corporate-attire',
-    excerpt: 'Elevate your executive identity in Westlands and Nairobi CBD. Master the art of clean color pairings and elegant structures.',
-    category: 'fashion-styling',
-    created_at: '2026-05-12',
-    image_url: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '6 min'
-  },
-  {
-    id: 'kh-17',
-    title: 'The Satchel Silhouette: Timeless Weekend Casual Outfits',
-    slug: 'satchel-silhouette-weekend-casual-outfits',
-    excerpt: 'Style casual earth-toned Rift Valley satchels with linen shirts, denim, and premium flats for flawless weekend brunches.',
-    category: 'fashion-styling',
-    created_at: '2026-04-05',
-    image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '5 min'
-  },
-
-  // Kenyan Craftsmanship
-  {
-    id: 'kh-18',
-    title: 'The Deep History Of Leather Craftsmanship In Kenya',
-    slug: 'history-of-leather-craftsmanship-in-kenya',
-    excerpt: 'From nomadic cattle-herding heritage to modern premium Nairobi workshops. Explore the rich legacy of high-grade tanning.',
-    category: 'kenyan-craftsmanship',
-    created_at: '2026-05-24',
-    image_url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '8 min'
-  },
-  {
-    id: 'kh-19',
-    title: 'Behind The Stitch: A Day in Our Kilimani Nairobi Workshop',
-    slug: 'behind-the-stitch-nairobi-workshop-tour',
-    excerpt: 'Meet our master leather artisans, explore our physical tools, and discover how slow, ethical fashion operates in practice.',
-    category: 'kenyan-craftsmanship',
-    created_at: '2026-05-01',
-    image_url: 'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '7 min'
-  },
-  {
-    id: 'kh-20',
-    title: 'Supporting Ethical Tanning: Our Raw Material Sourcing Practices',
-    slug: 'supporting-ethical-tanning-sourcing-practices',
-    excerpt: 'Learn how Mel\'s Fashion guarantees zero child labor, supports organic circular systems, and secures premium hides locally.',
-    category: 'kenyan-craftsmanship',
-    created_at: '2026-04-10',
-    image_url: 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?auto=format&fit=crop&q=80&w=800',
-    author_name: 'Mel\'s Fashion Team',
-    read_time: '9 min'
-  }
-];
-
-export default function Page() {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [dbArticles, setDbArticles] = useState<Article[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
+  const [dbArticles, setDbArticles] = useState<KnowledgeHubArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     async function fetchArticles() {
       try {
         const { data, error } = await supabase
           .from('blog_posts')
-          .select('id, title, slug, excerpt, category, created_at, image_url, author_name')
-          .neq('category', 'General');
+          .select('id, title, slug, excerpt, category, created_at, image_url, author_name, status')
+          .neq('category', 'General')
+          .eq('status', 'published');
         
         if (error) throw error;
         if (data && data.length > 0) {
@@ -273,8 +36,9 @@ export default function Page() {
             category: (post.category || 'General').toLowerCase().replace(/\s+/g, '-'),
             created_at: post.created_at.split('T')[0],
             image_url: post.image_url || 'https://images.unsplash.com/photo-1524289286702-f07229da36f5?auto=format&fit=crop&q=80&w=800',
-            author_name: post.author_name || 'Mel\'s Fashion Team',
-            read_time: '7 min'
+            author_name: post.author_name || "Mel's Fashion Team",
+            read_time: '7 min',
+            content: post.content || ''
           }));
           setDbArticles(formatted);
         }
@@ -287,18 +51,20 @@ export default function Page() {
     fetchArticles();
   }, []);
 
-  const allArticles = dbArticles.length > 0 ? [...dbArticles, ...FALLBACK_ARTICLES] : FALLBACK_ARTICLES;
+  // Merge DB articles with fallback, deduplicating by slug
+  const allArticles = (() => {
+    const dbSlugs = new Set(dbArticles.map(a => a.slug));
+    const fallbackUnique = FALLBACK_ARTICLES.filter(a => !dbSlugs.has(a.slug));
+    return [...dbArticles, ...fallbackUnique];
+  })();
 
-  // Filter unique articles by slug or id to prevent duplicates
-  const uniqueArticlesMap = new Map();
-  allArticles.forEach(art => {
-    uniqueArticlesMap.set(art.slug || art.id, art);
+  const filteredArticles = allArticles.filter(art => {
+    const matchesCategory = activeCategory === 'all' || art.category === activeCategory;
+    const matchesSearch = !searchQuery || 
+      art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      art.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
   });
-  const uniqueArticles = Array.from(uniqueArticlesMap.values());
-
-  const filteredArticles = activeCategory === 'all'
-    ? uniqueArticles
-    : uniqueArticles.filter(art => art.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-[#F5F2EB] pt-32 pb-24 px-6">
@@ -310,71 +76,141 @@ export default function Page() {
           onSelectCategory={(cat) => setActiveCategory(activeCategory === cat ? 'all' : cat)} 
         />
 
+        {/* Search Bar */}
+        <div className="relative max-w-xl mx-auto">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <input
+            type="text"
+            placeholder="Search guides, care tips, buying advice..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-6 py-4 bg-white border border-stone-200 rounded-2xl shadow-sm text-sm text-stone-700 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900 transition-all"
+          />
+        </div>
+
         {/* Filter Indicator / Reset Button */}
-        {activeCategory !== 'all' && (
+        {(activeCategory !== 'all' || searchQuery) && (
           <div className="flex justify-between items-center bg-white py-4 px-6 rounded-xl border border-stone-200/60 shadow-sm">
             <span className="text-stone-600 text-sm font-light">
-              Showing articles under <strong className="font-semibold text-stone-900 capitalize">{activeCategory.replace('-', ' ')}</strong>
+              {filteredArticles.length} guide{filteredArticles.length !== 1 ? 's' : ''} found
+              {activeCategory !== 'all' && <> in <strong className="font-semibold text-stone-900 capitalize">{activeCategory.replace(/-/g, ' ')}</strong></>}
+              {searchQuery && <> matching &ldquo;{searchQuery}&rdquo;</>}
             </span>
             <button 
-              onClick={() => setActiveCategory('all')}
+              onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
               className="text-stone-950 font-bold uppercase tracking-widest text-xs hover:text-stone-600 transition-colors"
             >
-              Clear Filter
+              Clear All
             </button>
           </div>
         )}
 
         {/* Article Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredArticles.map((art) => (
-            <div 
-              key={art.id} 
-              className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className="bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-sm animate-pulse">
+                <div className="aspect-[16/10] bg-stone-100" />
+                <div className="p-8 space-y-4">
+                  <div className="h-3 bg-stone-100 rounded w-1/4" />
+                  <div className="h-6 bg-stone-100 rounded w-3/4" />
+                  <div className="h-3 bg-stone-100 rounded w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredArticles.length === 0 ? (
+          <div className="text-center py-24 bg-white rounded-3xl border border-dashed border-stone-200">
+            <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-4" />
+            <p className="text-xl text-stone-500 font-serif italic">No guides found for this filter.</p>
+            <button
+              onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
+              className="mt-6 text-stone-900 font-bold uppercase tracking-widest text-xs border-b border-stone-900 pb-0.5"
             >
-              <div className="aspect-[16/10] bg-stone-100 relative overflow-hidden">
-                <img 
-                  src={art.image_url} 
-                  alt={art.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute top-4 left-4 bg-stone-900/90 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5 backdrop-blur-sm">
-                  <Tag className="w-3 h-3 text-stone-300" />
-                  <span>{art.category.replace('-', ' ')}</span>
-                </div>
-              </div>
-
-              <div className="p-8 flex flex-col justify-between flex-grow space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-[10px] uppercase font-bold tracking-widest text-stone-400">
-                    <span>{art.created_at}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {art.read_time || '7 min'}</span>
+              View All Guides
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.map((art) => (
+              <Link
+                key={art.id}
+                href={`/knowledge-hub/${art.slug}`}
+                className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div className="aspect-[16/10] bg-stone-100 relative overflow-hidden">
+                  <img 
+                    src={art.image_url} 
+                    alt={art.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-4 left-4 bg-stone-900/90 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5 backdrop-blur-sm">
+                    <Tag className="w-3 h-3 text-stone-300" />
+                    <span>{art.category.replace(/-/g, ' ')}</span>
                   </div>
-                  <h3 className="text-2xl font-serif text-stone-950 leading-snug group-hover:text-stone-600 transition-colors">
-                    {art.title}
-                  </h3>
-                  <p className="text-stone-500 font-light text-sm leading-relaxed line-clamp-3">
-                    {art.excerpt}
-                  </p>
                 </div>
 
-                <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
-                  <span className="text-stone-400 text-xs font-light">By {art.author_name}</span>
-                  <Link 
-                    href={`/knowledge-hub/${art.slug}`}
-                    className="inline-flex items-center gap-2 text-stone-950 font-bold uppercase tracking-widest text-xs hover:text-stone-600 transition-colors"
-                  >
-                    Read Guide <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                <div className="p-8 flex flex-col justify-between flex-grow space-y-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4 text-[10px] uppercase font-bold tracking-widest text-stone-400">
+                      <span>{art.created_at}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {art.read_time || '7 min'}</span>
+                    </div>
+                    <h3 className="text-2xl font-serif text-stone-950 leading-snug group-hover:text-stone-600 transition-colors">
+                      {art.title}
+                    </h3>
+                    <p className="text-stone-500 font-light text-sm leading-relaxed line-clamp-3">
+                      {art.excerpt}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between">
+                    <span className="text-stone-400 text-xs font-light">By {art.author_name}</span>
+                    <span className="inline-flex items-center gap-2 text-stone-950 font-bold uppercase tracking-widest text-xs group-hover:text-stone-600 transition-colors">
+                      Read Guide <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Internal Linking: SEO Landing Page Footer */}
+        <div className="bg-stone-900 text-white rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-4 max-w-xl">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-stone-400 block">Ready to Shop?</span>
+            <h2 className="text-3xl font-serif">Explore Our Leather Collection</h2>
+            <p className="text-stone-300 font-light text-sm leading-relaxed">Browse our handcrafted leather handbags, crafted by local artisans in our Kilimani workshop.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 shrink-0">
+            <Link href="/shop" className="bg-white text-stone-900 px-8 py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-stone-100 transition-colors text-center">
+              Browse All Bags
+            </Link>
+            <Link href="/leather-bags-nairobi" className="border border-stone-700 text-white px-8 py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-stone-800 transition-colors text-center">
+              Nairobi Leather Bags
+            </Link>
+          </div>
         </div>
 
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F5F2EB] pt-32 pb-24 px-6 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-stone-900 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-stone-500 font-serif italic text-sm">Loading Leather Academy...</p>
+        </div>
+      </div>
+    }>
+      <KnowledgeHubContent />
+    </Suspense>
   );
 }

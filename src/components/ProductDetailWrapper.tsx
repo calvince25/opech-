@@ -6,8 +6,22 @@ import { Product } from '@/types';
 import { useCart } from '@/providers/CartProvider';
 import ProductCard from './ProductCard';
 import Reviews from './Reviews';
-import { ArrowLeft, Truck, ShieldCheck, MapPin, Sparkles } from 'lucide-react';
+import { ArrowLeft, Truck, ShieldCheck, MapPin, Sparkles, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { FALLBACK_ARTICLES } from '@/lib/knowledgeHubData';
+
+// Map product categories to relevant KH article categories
+const CATEGORY_MAP: Record<string, string> = {
+  'tote bags': 'buying-guides',
+  'tote': 'buying-guides',
+  'crossbody': 'buying-guides',
+  'crossbody bags': 'buying-guides',
+  'clutch': 'fashion-styling',
+  'clutches': 'fashion-styling',
+  'handbags': 'buying-guides',
+  'leather bags': 'leather-education',
+  'work bags': 'buying-guides',
+};
 
 interface Props {
   product: Product;
@@ -164,6 +178,58 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
         <div id="reviews">
           <Reviews />
         </div>
+
+        {/* Related Guides from Knowledge Hub */}
+        {(() => {
+          const catKey = (product.category || '').toLowerCase();
+          const khCat = CATEGORY_MAP[catKey] || 'buying-guides';
+          const guides = FALLBACK_ARTICLES
+            .filter(a => a.category === khCat)
+            .slice(0, 3);
+          if (guides.length === 0) return null;
+          return (
+            <div className="mt-24 pt-16 border-t border-stone-200/60">
+              <div className="flex items-center justify-between mb-10 flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-5 h-5 text-stone-400" />
+                  <h2 className="text-3xl font-serif text-stone-900">From the Leather Academy</h2>
+                </div>
+                <Link
+                  href="/knowledge-hub"
+                  className="text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors"
+                >
+                  All Guides →
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {guides.map(guide => (
+                  <Link
+                    key={guide.id}
+                    href={`/knowledge-hub/${guide.slug}`}
+                    className="group bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <div className="aspect-[16/9] bg-stone-100 overflow-hidden">
+                      <img
+                        src={guide.image_url}
+                        alt={guide.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-6 space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">{guide.category.replace(/-/g, ' ')}</span>
+                      <h3 className="font-serif text-lg text-stone-900 group-hover:text-stone-600 transition-colors leading-snug">{guide.title}</h3>
+                      <p className="text-stone-500 text-xs font-light leading-relaxed line-clamp-2">{guide.excerpt}</p>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-stone-700 pt-1">
+                        Read Guide <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
       </div>
     </div>

@@ -95,7 +95,14 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart, user, isAdmin })
             </button>
 
             {user ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="p-2 hover:bg-[#2C2A26]/10 rounded-full transition-colors"
+                  title="My Account"
+                >
+                  <UserIcon className="w-5 h-5" />
+                </Link>
                 <button 
                   onClick={handleLogout}
                   className="p-2 hover:bg-[#2C2A26]/10 rounded-full transition-colors"
@@ -144,7 +151,12 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart, user, isAdmin })
                 Admin Panel
               </Link>
             )}
-            {!user && (
+            {user ? (
+              <>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="hover:opacity-60 transition-opacity text-sm uppercase tracking-widest">my account</Link>
+                <button onClick={handleLogout} className="text-sm uppercase tracking-widest hover:opacity-60 transition-opacity">sign out</button>
+              </>
+            ) : (
               <Link href="/auth" onClick={() => setMobileMenuOpen(false)} className="text-sm uppercase tracking-widest font-bold">
                 Login / Sign Up
               </Link>
