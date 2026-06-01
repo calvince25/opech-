@@ -102,7 +102,12 @@ export default function Admin() {
     content: '', 
     image_url: '',
     meta_title: '',
-    meta_description: ''
+    meta_description: '',
+    category: 'General',
+    tags: '',
+    status: 'published',
+    scheduled_at: '',
+    canonical_url: ''
   });
 
   const insertFormatting = (tag: string, endTag?: string) => {
@@ -134,21 +139,39 @@ export default function Admin() {
     }, 0);
   };
 
-  const handleOpenBlogModal = (post?: BlogPost) => {
+  const handleOpenBlogModal = (post?: any) => {
     if (post) {
       setEditingBlog(post);
       setBlogForm({
-        title: post.title,
+        title: post.title || '',
         slug: post.slug || '',
         excerpt: post.excerpt || '',
         content: post.content || '',
         image_url: post.image_url || '',
         meta_title: post.meta_title || '',
-        meta_description: post.meta_description || ''
+        meta_description: post.meta_description || '',
+        category: post.category || 'General',
+        tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
+        status: post.status || 'published',
+        scheduled_at: post.scheduled_at ? new Date(post.scheduled_at).toISOString().slice(0, 16) : '',
+        canonical_url: post.canonical_url || ''
       });
     } else {
       setEditingBlog(null);
-      setBlogForm({ title: '', slug: '', excerpt: '', content: '', image_url: '', meta_title: '', meta_description: '' });
+      setBlogForm({
+        title: '',
+        slug: '',
+        excerpt: '',
+        content: '',
+        image_url: '',
+        meta_title: '',
+        meta_description: '',
+        category: 'General',
+        tags: '',
+        status: 'published',
+        scheduled_at: '',
+        canonical_url: ''
+      });
     }
     setShowBlogModal(true);
   };
@@ -161,9 +184,20 @@ export default function Admin() {
     if (user) {
       try {
         const slug = blogForm.slug || blogForm.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        const tagsArray = blogForm.tags ? blogForm.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
         const data = { 
-          ...blogForm, 
-          slug, 
+          title: blogForm.title,
+          slug,
+          excerpt: blogForm.excerpt,
+          content: blogForm.content,
+          image_url: blogForm.image_url,
+          meta_title: blogForm.meta_title,
+          meta_description: blogForm.meta_description,
+          category: blogForm.category,
+          tags: tagsArray,
+          status: blogForm.status,
+          scheduled_at: blogForm.scheduled_at ? new Date(blogForm.scheduled_at).toISOString() : null,
+          canonical_url: blogForm.canonical_url || null,
           author_id: user.id,
           author_name: 'Mel\'s Fashion Admin'
         };
@@ -744,7 +778,7 @@ export default function Admin() {
                         <tr key={product.id} className="hover:bg-stone-50 transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <img src={product.image_url} className="w-10 h-10 object-cover rounded" />
+                              <img src={product.image_url} alt={product.name} className="w-10 h-10 object-cover rounded" />
                               <span className="font-medium">{product.name}</span>
                             </div>
                           </td>
@@ -807,6 +841,33 @@ export default function Admin() {
                           onChange={(e) => setBlogForm({ ...blogForm, image_url: e.target.value })}
                           className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-xs"
                           placeholder="https://images.unsplash.com/..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Category *</label>
+                        <select 
+                          value={blogForm.category}
+                          onChange={(e) => setBlogForm({ ...blogForm, category: e.target.value })}
+                          className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-xs"
+                        >
+                          <option value="General">General (The Journal)</option>
+                          <option value="Leather Education">Leather Education</option>
+                          <option value="Leather Care">Leather Care</option>
+                          <option value="Buying Guides">Buying Guides</option>
+                          <option value="Fashion & Styling">Fashion & Styling</option>
+                          <option value="Kenyan Craftsmanship">Kenyan Craftsmanship</option>
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Tags (comma separated)</label>
+                        <input 
+                          value={blogForm.tags}
+                          onChange={(e) => setBlogForm({ ...blogForm, tags: e.target.value })}
+                          className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-stone-900 outline-none text-xs"
+                          placeholder="leather, care, handbags, nairobi"
                         />
                       </div>
                     </div>
@@ -912,11 +973,43 @@ export default function Admin() {
                         <div className="space-y-2">
                           <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Meta Description</label>
                           <textarea 
-                            rows={4}
+                            rows={3}
                             value={blogForm.meta_description}
                             onChange={(e) => setBlogForm({ ...blogForm, meta_description: e.target.value })}
                             className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs resize-none"
                             placeholder="SEO Optimized Description (approx 160 chars)"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Status</label>
+                          <select 
+                            value={blogForm.status}
+                            onChange={(e) => setBlogForm({ ...blogForm, status: e.target.value })}
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs"
+                          >
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="scheduled">Scheduled</option>
+                          </select>
+                        </div>
+                        {blogForm.status === 'scheduled' && (
+                          <div className="space-y-2">
+                            <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Scheduled Date & Time</label>
+                            <input 
+                              type="datetime-local"
+                              value={blogForm.scheduled_at}
+                              onChange={(e) => setBlogForm({ ...blogForm, scheduled_at: e.target.value })}
+                              className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs"
+                            />
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Canonical URL</label>
+                          <input 
+                            value={blogForm.canonical_url}
+                            onChange={(e) => setBlogForm({ ...blogForm, canonical_url: e.target.value })}
+                            className="w-full px-3 py-2 bg-white border border-stone-200 rounded-md focus:ring-1 focus:ring-stone-900 outline-none text-xs"
+                            placeholder="https://www.mellsfashion.co.ke/..."
                           />
                         </div>
                       </div>

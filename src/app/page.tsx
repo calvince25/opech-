@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import MainLayout from '@/components/MainLayout';
 import Hero from '@/components/Hero';
 import ProductGrid from '@/components/ProductGrid';
@@ -8,7 +9,16 @@ import Features from '@/components/Features';
 import Journal from '@/components/Journal';
 import Reviews from '@/components/Reviews';
 import StructuredData from '@/components/SEO/StructuredData';
+import HomepageSEOContent from '@/components/HomepageSEOContent';
 import { supabase } from '@/lib/supabase';
+
+export const metadata: Metadata = {
+  title: "Mel's Fashion | Premium Handbags Nairobi | Handcrafted in Kenya",
+  description: "Mel's Fashion specializes in premium, handcrafted genuine leather handbags in Nairobi, Kenya. Explore our exclusive collection of luxury totes, clutches, and crossbody bags.",
+  alternates: {
+    canonical: 'https://www.mellsfashion.co.ke',
+  },
+};
 
 export default async function Home() {
   const { data: recentProducts } = await supabase
@@ -37,6 +47,8 @@ export default async function Home() {
       <Journal />
 
       <Reviews />
+
+      <HomepageSEOContent />
 
       {/* Social Proof Section */}
       <section className="py-24 bg-white overflow-hidden">
@@ -80,8 +92,9 @@ export default async function Home() {
                   </div>
                   <img 
                     src={`https://images.unsplash.com/photo-159${i}223274512-ad4803739b7c?auto=format&fit=crop&q=80&w=600`} 
-                    alt="Mels Fashion Placeholder" 
+                    alt={`Mel's Fashion handcrafted leather handbag collection — premium bags made in Nairobi Kenya`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                   />
                 </div>
               ))

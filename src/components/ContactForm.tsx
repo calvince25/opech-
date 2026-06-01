@@ -63,7 +63,7 @@ export default function ContactForm() {
             <Mail className="w-6 h-6 text-stone-900 mt-1" />
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest text-stone-900 mb-2">Email</h3>
-              <p className="text-stone-500 font-light leading-relaxed">hello@mellsfasion.co.ke</p>
+              <p className="text-stone-500 font-light leading-relaxed">hello@mellsfashion.co.ke</p>
             </div>
           </div>
         </div>

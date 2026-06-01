@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StructuredDataProps {
-  type: 'LocalBusiness' | 'Product' | 'CollectionPage' | 'Organization' | 'BreadcrumbList';
+  type: 'LocalBusiness' | 'Product' | 'CollectionPage' | 'Organization' | 'BreadcrumbList' | 'FAQPage' | 'Article';
   data: any;
 }
 
@@ -13,8 +13,8 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Mel's Fashion",
-      "url": "https://www.mellsfasion.co.ke",
-      "logo": "https://www.mellsfasion.co.ke/logo.png",
+      "url": "https://www.mellsfashion.co.ke",
+      "logo": "https://www.mellsfashion.co.ke/logo.png",
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+254-700-000-000",
@@ -33,9 +33,9 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "Mel's Fashion",
-      "image": "https://www.mellsfasion.co.ke/hero.jpg",
-      "@id": "https://www.mellsfasion.co.ke",
-      "url": "https://www.mellsfasion.co.ke",
+      "image": "https://www.mellsfashion.co.ke/hero.jpg",
+      "@id": "https://www.mellsfashion.co.ke",
+      "url": "https://www.mellsfashion.co.ke",
       "telephone": "+254-700-000-000",
       "address": {
         "@type": "PostalAddress",
@@ -77,7 +77,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       },
       "offers": {
         "@type": "Offer",
-        "url": `https://www.mellsfasion.co.ke/product/${data.id}`,
+        "url": `https://www.mellsfashion.co.ke/product/${data.id}`,
         "priceCurrency": "KES",
         "price": data.price,
         "availability": data.in_stock !== false ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
@@ -97,7 +97,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
         "@type": "ListItem",
         "position": index + 1,
         "name": link.name,
-        "item": `https://www.mellsfasion.co.ke${link.href}`
+        "item": `https://www.mellsfashion.co.ke${link.href}`
       }))
     };
   } else if (type === 'CollectionPage') {
@@ -106,7 +106,42 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
         "@type": "CollectionPage",
         "name": data.title || "Premium Handbags Kenya Collection | Mel's Fashion",
         "description": data.description || "Browse our exclusive collection of handcrafted premium handbags in Kenya.",
-        "url": `https://www.mellsfasion.co.ke${data.path || ''}`
+        "url": `https://www.mellsfashion.co.ke${data.path || ''}`
+    };
+  } else if (type === 'FAQPage') {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": data.faqs.map((faq: any) => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    };
+  } else if (type === 'Article') {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": data.title,
+      "image": data.image_url,
+      "datePublished": data.created_at,
+      "dateModified": data.updated_at || data.created_at,
+      "author": {
+        "@type": "Person",
+        "name": data.author_name || "Mel's Fashion Team"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mel's Fashion",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.mellsfashion.co.ke/logo.png"
+        }
+      },
+      "description": data.meta_description || data.description
     };
   }
 

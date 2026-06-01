@@ -48,7 +48,7 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
             <div className="grid grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="relative aspect-square bg-stone-100 rounded-xl overflow-hidden opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
-                   <Image src={product.image_url} alt="Detail" fill className="object-cover grayscale" />
+                   <Image src={product.image_url} alt={`${product.name} — Handcrafted Leather Handbag detail view ${i}`} fill className="object-cover grayscale" />
                 </div>
               ))}
             </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useCart } from '@/providers/CartProvider';
 import { useAuth } from '@/providers/AuthProvider';
 import { Loader2, CheckCircle2, ShieldCheck, Truck, ChevronLeft, Package } from 'lucide-react';
+import GoogleReviewCTA from '@/components/GoogleReviewCTA';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
@@ -127,25 +128,28 @@ export default function CheckoutPage() {
   /* ─── Success Screen ─── */
   if (orderSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F5F2EB] px-6">
-        <div className="max-w-md w-full text-center space-y-10">
-          <div className="flex justify-center">
-            <div className="w-28 h-28 bg-green-50 rounded-full flex items-center justify-center shadow-lg">
-              <CheckCircle2 className="w-14 h-14 text-green-500" />
+      <div className="min-h-screen bg-[#F5F2EB] px-6 pt-32 pb-24">
+        <div className="max-w-xl mx-auto space-y-10">
+          <div className="text-center space-y-6">
+            <div className="flex justify-center">
+              <div className="w-28 h-28 bg-green-50 rounded-full flex items-center justify-center shadow-lg">
+                <CheckCircle2 className="w-14 h-14 text-green-500" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h1 className="text-5xl font-serif text-stone-900">Order Placed!</h1>
+              <p className="text-stone-500 font-light leading-relaxed">
+                Thank you, <strong>{form.firstName}</strong>! Your order has been received. We'll reach out to{' '}
+                <strong>{form.phone}</strong> shortly to confirm delivery details.
+              </p>
+              {form.email && (
+                <p className="text-stone-400 text-sm italic">
+                  A confirmation will also be sent to {form.email}.
+                </p>
+              )}
             </div>
           </div>
-          <div className="space-y-4">
-            <h1 className="text-5xl font-serif text-stone-900">Order Placed!</h1>
-            <p className="text-stone-500 font-light leading-relaxed">
-              Thank you, <strong>{form.firstName}</strong>! Your order has been received. We'll reach out to{' '}
-              <strong>{form.phone}</strong> shortly to confirm delivery details.
-            </p>
-            {form.email && (
-              <p className="text-stone-400 text-sm italic">
-                A confirmation will also be sent to {form.email}.
-              </p>
-            )}
-          </div>
+
           <div className="bg-white rounded-2xl p-6 border border-stone-100 text-left space-y-2">
             <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-3">Order Summary</p>
             {cartItems.map((item, i) => (
@@ -162,6 +166,10 @@ export default function CheckoutPage() {
               Delivery fee to be confirmed at dispatch
             </p>
           </div>
+
+          {/* Google Review CTA — shown after every successful order */}
+          <GoogleReviewCTA />
+
           <button
             onClick={() => router.push('/')}
             className="w-full py-5 bg-stone-900 text-white rounded-full text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-xl"

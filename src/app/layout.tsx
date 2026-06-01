@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { CartProvider } from "@/providers/CartProvider";
 import MainLayout from "@/components/MainLayout";
+import Analytics from "@/components/Analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -42,12 +43,26 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Mel's Fashion | Premium Handcrafted Handbags",
-    description: "The home of premium handbags in Kenya. Handcrafted in Nairobi with artisanal excellence.",
+    title: "Mel's Fashion | Premium Handbags Nairobi | Handcrafted in Kenya",
+    description: "Discover our unique collection of handcrafted premium leather handbags in Nairobi. Premium clutches, totes, and crossbody bags with artisanal excellence.",
     url: "https://www.mellsfashion.co.ke",
     siteName: "Mel's Fashion",
     locale: "en_KE",
     type: "website",
+    images: [
+      {
+        url: "/blog-hero.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mel's Fashion — Premium Handcrafted Leather Handbags Nairobi",
+      }
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mel's Fashion | Premium Handbags Nairobi | Handcrafted in Kenya",
+    description: "Discover our unique collection of handcrafted premium leather handbags in Nairobi.",
+    images: ["/blog-hero.jpg"],
   },
   robots: {
     index: true,
@@ -59,6 +74,12 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  other: {
+    "geo.region": "KE-110",
+    "geo.placename": "Nairobi",
+    "geo.position": "-1.286389;36.817223",
+    "ICBM": "-1.286389, 36.817223",
   },
 };
 
@@ -79,6 +100,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="antialiased font-sans">
+        <Analytics />
         <AuthProvider>
           <CartProvider>
             <MainLayout>
