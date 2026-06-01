@@ -55,7 +55,16 @@ export default function ContactForm() {
             <Phone className="w-6 h-6 text-stone-900 mt-1" />
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest text-stone-900 mb-2">Call/WhatsApp</h3>
-              <p className="text-stone-500 font-light leading-relaxed">+254 740 899 918</p>
+              <p className="text-stone-500 font-light leading-relaxed">
+                <a 
+                  href="https://wa.me/254740899918" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-stone-900 transition-colors font-semibold border-b border-dashed border-stone-300 pb-0.5"
+                >
+                  +254 740 899 918
+                </a>
+              </p>
             </div>
           </div>
 

@@ -7,6 +7,7 @@ import { FALLBACK_ARTICLES, KnowledgeHubArticle } from '@/lib/knowledgeHubData';
 import KnowledgeHubCategoryBrowser from '@/components/KnowledgeHub';
 import { ArrowRight, BookOpen, Clock, Tag, Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { CATEGORY_ACADEMY_TEXTBOOKS } from '@/lib/categoryTextbooks';
 
 function KnowledgeHubContent() {
   const searchParams = useSearchParams();
@@ -75,6 +76,18 @@ function KnowledgeHubContent() {
           activeCategory={activeCategory} 
           onSelectCategory={(cat) => setActiveCategory(activeCategory === cat ? 'all' : cat)} 
         />
+
+        {/* Atelier Academy Textbook - Dynamic Category Content */}
+        {activeCategory !== 'all' && CATEGORY_ACADEMY_TEXTBOOKS[activeCategory] && (
+          <div className="bg-white rounded-3xl border border-stone-200/60 shadow-md p-8 md:p-12 space-y-8 animate-fadeIn">
+            <div className="space-y-2 border-b border-stone-100 pb-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-500 block">Atelier Academy Textbook</span>
+              <h2 className="text-3xl font-serif text-stone-900">{CATEGORY_ACADEMY_TEXTBOOKS[activeCategory].title}</h2>
+              <p className="text-stone-500 font-light italic text-sm">{CATEGORY_ACADEMY_TEXTBOOKS[activeCategory].subtitle}</p>
+            </div>
+            {CATEGORY_ACADEMY_TEXTBOOKS[activeCategory].content}
+          </div>
+        )}
 
         {/* Search Bar */}
         <div className="relative max-w-xl mx-auto">

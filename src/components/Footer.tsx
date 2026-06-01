@@ -54,6 +54,26 @@ export default function Footer() {
               <p className="flex items-center gap-4"><span className="text-stone-300">TEL:</span> +254 740 899 918</p>
               <p className="flex items-center gap-4"><span className="text-stone-300">EML:</span> hello@mellsfashion.co.ke</p>
             </div>
+            <div className="mt-8 flex gap-4">
+              <a 
+                href="https://www.instagram.com/mels_fashion_k.e?igsh=MWsweGs5ZXdtZjlrMg==" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 bg-stone-50 rounded-full border border-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-all shadow-sm"
+                aria-label="Instagram"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a 
+                href="https://wa.me/254740899918" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 bg-stone-50 rounded-full border border-stone-200 text-stone-600 hover:bg-green-600 hover:text-white transition-all shadow-sm"
+                aria-label="WhatsApp"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.665.988 3.311 1.485 5.38 1.488 5.487 0 9.95-4.461 9.954-9.95.002-2.66-1.033-5.161-2.914-7.042C17.18 1.83 14.682.791 12.016.791c-5.495 0-9.958 4.462-9.962 9.952-.001 2.124.557 4.195 1.615 5.922l-.242 1.012-.862 3.149 3.22-.843.862.247zm9.648-6.195c-.244-.122-1.443-.712-1.668-.794-.224-.082-.387-.123-.55.123-.162.246-.628.795-.77 1-.142.205-.285.23-.529.107-1.09-.54-2.03-1.002-2.812-2.348-.152-.259 0-.399.13-.529.117-.117.244-.275.366-.412.122-.137.163-.23.244-.397.082-.164.041-.308-.02-.431-.06-.123-.55-1.32-.754-1.815-.198-.48-.4-.415-.55-.422H9.27c-.163 0-.427.061-.65.287-.224.226-.854.835-.854 2.037 0 1.201.874 2.361.995 2.525.122.164 1.722 2.628 4.171 3.687 2.062.894 2.45.712 2.902.662.453-.05 1.442-.589 1.644-1.157.204-.567.204-1.05.143-1.152-.061-.102-.224-.164-.468-.286z"/></svg>
+              </a>
+            </div>
             <div className="mt-10 flex gap-4 items-center">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-stone-100 rounded-md border border-stone-200">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-green-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -123,61 +143,13 @@ export default function Footer() {
           {/* Google Review QR Code */}
           <div className="md:col-span-5 lg:col-span-4">
             <div className="bg-gradient-to-br from-stone-900 to-stone-800 text-white rounded-2xl p-8 flex gap-8 items-center">
-              {/* QR Code SVG Placeholder — styled as a QR icon with Google colors */}
-              <div className="shrink-0 w-24 h-24 bg-white rounded-xl flex items-center justify-center shadow-md relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {/* Simulated QR code pattern */}
-                  <svg viewBox="0 0 100 100" className="w-20 h-20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* Top-left finder pattern */}
-                    <rect x="5" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                    <rect x="10" y="10" width="20" height="20" rx="2" fill="white"/>
-                    <rect x="14" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                    {/* Top-right finder pattern */}
-                    <rect x="65" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                    <rect x="70" y="10" width="20" height="20" rx="2" fill="white"/>
-                    <rect x="74" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                    {/* Bottom-left finder pattern */}
-                    <rect x="5" y="65" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                    <rect x="10" y="70" width="20" height="20" rx="2" fill="white"/>
-                    <rect x="14" y="74" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                    {/* Data dots — simulated pattern */}
-                    <rect x="40" y="5" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="50" y="5" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="15" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="55" y="15" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="25" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="5" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="15" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="25" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="40" width="5" height="5" rx="1" fill="#4285F4"/>
-                    <rect x="50" y="40" width="5" height="5" rx="1" fill="#EA4335"/>
-                    <rect x="60" y="40" width="5" height="5" rx="1" fill="#FBBC04"/>
-                    <rect x="70" y="40" width="5" height="5" rx="1" fill="#34A853"/>
-                    <rect x="80" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="90" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="5" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="20" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="55" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="70" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="85" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="50" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="60" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="75" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="55" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="70" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="85" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="80" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="50" y="80" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="60" y="80" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="40" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="55" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="80" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                    <rect x="90" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  </svg>
-                </div>
+              {/* QR Code — High Resolution */}
+              <div className="shrink-0 w-24 h-24 bg-white rounded-xl flex items-center justify-center shadow-md relative overflow-hidden p-2">
+                <img 
+                  src="/google-review-qr.png" 
+                  alt="Google Review QR Code" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="space-y-3">
                 <div className="flex gap-1">
@@ -188,7 +160,7 @@ export default function Footer() {
                 <h4 className="font-serif text-lg text-white leading-tight">Love your bag?<br />Leave us a review!</h4>
                 <p className="text-stone-300 text-xs font-light leading-relaxed">Scan to share your experience on Google and help other shoppers.</p>
                 <a
-                  href="https://g.page/r/mellsfashion/review"
+                  href="https://g.page/r/CQSxu8eF3_qjEBI/review"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-300 hover:text-white transition-colors"

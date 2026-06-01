@@ -183,31 +183,16 @@ export default function DashboardPage() {
               </div>
 
               {/* QR Code */}
-              <div className="bg-white rounded-2xl p-4 flex items-center justify-center mx-auto w-36 h-36">
-                <svg viewBox="0 0 100 100" className="w-28 h-28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="10" y="10" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="14" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="65" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="70" y="10" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="74" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="5" y="65" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="10" y="70" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="14" y="74" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="40" width="5" height="5" rx="1" fill="#4285F4"/>
-                  <rect x="50" y="40" width="5" height="5" rx="1" fill="#EA4335"/>
-                  <rect x="60" y="40" width="5" height="5" rx="1" fill="#FBBC04"/>
-                  <rect x="70" y="40" width="5" height="5" rx="1" fill="#34A853"/>
-                  <rect x="40" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="55" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="60" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                </svg>
+              <div className="bg-white rounded-2xl p-3 flex items-center justify-center mx-auto w-36 h-36">
+                <img 
+                  src="/google-review-qr.png" 
+                  alt="Google Review QR Code" 
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <a
-                href="https://g.page/r/mellsfashion/review"
+                href="https://g.page/r/CQSxu8eF3_qjEBI/review"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setHasReviewed(true)}

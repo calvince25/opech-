@@ -60,47 +60,12 @@ export default function ContactPage() {
             {/* QR Code Card */}
             <div className="bg-stone-800 rounded-3xl p-10 flex flex-col items-center text-center space-y-6 border border-stone-700">
               {/* QR code SVG */}
-              <div className="w-40 h-40 bg-white rounded-2xl flex items-center justify-center shadow-xl">
-                <svg viewBox="0 0 100 100" className="w-32 h-32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="10" y="10" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="14" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="65" y="5" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="70" y="10" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="74" y="14" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="5" y="65" width="30" height="30" rx="3" fill="#1a1a1a"/>
-                  <rect x="10" y="70" width="20" height="20" rx="2" fill="white"/>
-                  <rect x="14" y="74" width="12" height="12" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="5" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="50" y="5" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="15" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="55" y="15" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="25" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="5" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="15" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="25" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="40" width="5" height="5" rx="1" fill="#4285F4"/>
-                  <rect x="50" y="40" width="5" height="5" rx="1" fill="#EA4335"/>
-                  <rect x="60" y="40" width="5" height="5" rx="1" fill="#FBBC04"/>
-                  <rect x="70" y="40" width="5" height="5" rx="1" fill="#34A853"/>
-                  <rect x="80" y="40" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="5" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="20" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="55" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="70" y="50" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="55" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="70" y="60" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="60" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="80" y="70" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="80" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="55" y="80" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="40" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="65" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                  <rect x="85" y="90" width="5" height="5" rx="1" fill="#1a1a1a"/>
-                </svg>
+              <div className="w-40 h-40 bg-white rounded-2xl flex items-center justify-center shadow-xl p-3">
+                <img 
+                  src="/google-review-qr.png" 
+                  alt="Scan to Review Mel's Fashion"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <p className="text-stone-300 text-sm font-light mb-2">Scan with your phone camera</p>
@@ -133,7 +98,7 @@ export default function ContactPage() {
                 </ul>
               </div>
               <a
-                href="https://g.page/r/mellsfashion/review"
+                href="https://g.page/r/CQSxu8eF3_qjEBI/review"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-white text-stone-900 px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-stone-100 transition-colors"
