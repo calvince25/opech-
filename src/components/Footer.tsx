@@ -199,7 +199,19 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold uppercase tracking-[0.3em] text-stone-300">
-          <p>© {new Date().getFullYear()} Mel's Fashion Nairobi — Handcrafted in Kilimani</p>
+          <p>
+            © {new Date().getFullYear()} Mel's Fashion Nairobi — Handcrafted in Kilimani
+            <span className="mx-3 text-stone-200">|</span>
+            Designed by{' '}
+            <a
+              href="https://www.growthlab.co.ke"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-stone-400 hover:text-stone-900 transition-colors underline decoration-stone-200 underline-offset-4"
+            >
+              growthlab
+            </a>
+          </p>
           <div className="flex gap-12 mt-8 md:mt-0">
             <a href="#" className="hover:text-stone-900 transition-colors">Terms</a>
             <a href="#" className="hover:text-stone-900 transition-colors">Privacy</a>
