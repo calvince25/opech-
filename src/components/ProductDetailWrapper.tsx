@@ -9,6 +9,7 @@ import Reviews from './Reviews';
 import { ArrowLeft, Truck, ShieldCheck, MapPin, Sparkles, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { FALLBACK_ARTICLES } from '@/lib/knowledgeHubData';
+import StructuredData from './SEO/StructuredData';
 
 // Map product categories to relevant KH article categories
 const CATEGORY_MAP: Record<string, string> = {
@@ -34,6 +35,14 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
 
   return (
     <div className="pt-32 pb-24 bg-[#F5F2EB]">
+      <StructuredData
+        type="BreadcrumbList"
+        data={{ links: [
+          { name: 'Home', href: '/' },
+          { name: 'Shop', href: '/shop' },
+          { name: product.name, href: `/product/${product.id}` },
+        ] }}
+      />
       <div className="max-w-[1800px] mx-auto px-6 md:px-12">
         
         {/* Breadcrumbs */}
@@ -94,15 +103,13 @@ export default function ProductDetailWrapper({ product, relatedProducts }: Props
               KES {product.price.toLocaleString()}
             </button>
 
-            {/* M-Pesa Badge */}
+            {/* Secure payment badge */}
             <div className="bg-white/50 border border-stone-200 rounded-2xl p-4 flex items-center justify-between mb-12">
               <div className="flex items-center gap-3">
-                <div className="relative w-12 h-6">
-                  <Image src="https://img.icons8.com/color/48/m-pesa.png" alt="M-Pesa" fill className="object-contain" />
-                </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-stone-900">M-Pesa Express Checkout Available</span>
+                <ShieldCheck className="w-5 h-5 text-stone-700" />
+                <span className="text-[11px] font-bold uppercase tracking-widest text-stone-900">Secure Paystack Checkout Available</span>
               </div>
-              <ShieldCheck className="w-5 h-5 text-stone-300" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">KES</span>
             </div>
 
             {/* Tabs for Details */}

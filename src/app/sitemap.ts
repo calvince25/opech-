@@ -1,5 +1,14 @@
 import { MetadataRoute } from 'next';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+export const dynamic = 'force-dynamic';
+
+function getSitemapClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.mellsfashion.co.ke';
@@ -24,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/genuine-leather-bags-kenya',
     '/tote-bags-nairobi',
     '/crossbody-bags-kenya',
+    '/reviews',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -32,7 +42,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Dynamic Product routes
-  const { data: products } = await supabase.from('products').select('id, updated_at');
+  const client = getSitemapClient();
+  const { data: products } = client
+    ? await client.from('products').select('id, updated_at')
+    : { data: [] };
   const productRoutes = (products || []).map((product) => ({
     url: `${baseUrl}/product/${product.id}`,
     lastModified: new Date(product.updated_at || Date.now()),
@@ -41,7 +54,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Dynamic Blog / Knowledge Hub routes
-  const { data: posts } = await supabase.from('blog_posts').select('id, slug, category, created_at');
+  const { data: posts } = client
+    ? await client.from('blog_posts').select('id, slug, category, created_at')
+    : { data: [] };
   const blogRoutes = (posts || []).map((post) => {
     const isKnowledgeHub = post.category && post.category !== 'General';
     const path = isKnowledgeHub 

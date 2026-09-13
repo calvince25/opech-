@@ -39,7 +39,7 @@ export default function ShopPage() {
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-6 text-center">
           <span className="text-xs font-bold uppercase tracking-[0.3em] text-white/70 mb-6 block">Collection</span>
-          <h1 className="text-5xl md:text-7xl font-serif text-white mb-8 lowercase italic">All Pieces</h1>
+          <h1 className="text-5xl md:text-7xl font-serif text-white mb-8 lowercase italic">Handcrafted Handbags in Kenya</h1>
           <p className="max-w-xl mx-auto text-white/90 font-light text-lg italic leading-relaxed">
             Every bag tells a story of Kenyan heritage, meticulously handcrafted in our Nairobi workshop for those who appreciate the finer details.
           </p>

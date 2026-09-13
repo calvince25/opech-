@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Product } from '../types';
 import { useCart } from '@/providers/CartProvider';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface ProductCardProps {
   product: Product;
@@ -12,17 +12,11 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart, setIsCartOpen } = useCart();
-  const router = useRouter();
 
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
     addToCart(product);
     setIsCartOpen(true);
-  };
-
-  const handleTitleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.push(`/product/${product.id}`);
   };
 
   return (
@@ -48,12 +42,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       
       <div className="text-center">
-        <h3 
-          onClick={handleTitleClick}
+        <Link
+          href={`/product/${product.id}`}
+          onClick={(e) => e.stopPropagation()}
           className="text-2xl font-serif font-medium text-stone-900 mb-1 hover:text-stone-500 transition-colors cursor-pointer inline-block"
         >
           {product.name}
-        </h3>
+        </Link>
         <p className="text-sm font-light text-stone-500 mb-3 tracking-wide">{product.category}</p>
         <span className="text-sm font-medium text-stone-900 block">KES {product.price.toLocaleString()}</span>
       </div>

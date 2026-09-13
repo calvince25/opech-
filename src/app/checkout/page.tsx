@@ -15,8 +15,6 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'card'>('mpesa');
-
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
