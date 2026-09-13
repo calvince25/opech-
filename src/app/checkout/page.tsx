@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '@/providers/CartProvider';
 import { useAuth } from '@/providers/AuthProvider';
 import { Loader2, CheckCircle2, ShieldCheck, Truck, ChevronLeft, Package } from 'lucide-react';
 import GoogleReviewCTA from '@/components/GoogleReviewCTA';
-import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 export default function CheckoutPage() {
@@ -29,6 +28,20 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const payment = searchParams.get('payment');
+    if (payment === 'success') {
+      setOrderId(searchParams.get('order') || '');
+      setOrderSuccess(true);
+      clearCart();
+      router.replace('/checkout');
+    } else if (payment === 'failed') {
+      alert('Payment was not completed. Your order was not confirmed. Please try again.');
+      router.replace('/checkout');
+    }
+  }, [clearCart, router]);
+
   const setField = (key: keyof typeof form, val: string) =>
     setForm(prev => ({ ...prev, [key]: val }));
 
@@ -43,59 +56,20 @@ export default function CheckoutPage() {
     setLoading(true);
 
     try {
-      const orderPayload = {
-        customer_id: user?.id || null,
-        phone_number: form.phone,
-        amount: subtotal,
-        items: cartItems,
-        status: 'pending',
-        shipping_address: {
-          name: `${form.firstName} ${form.lastName}`.trim(),
-          email: form.email,
-          address: form.address,
-          city: form.city,
-        },
-      };
-
-      const { data: orderData, error: orderError } = await supabase
-        .from('orders')
-        .insert(orderPayload)
-        .select()
-        .single();
-
-      if (orderError) {
-        throw new Error(`Order registration failed: ${orderError.message}`);
+      const res = await fetch('/api/paystack/initialize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: form,
+          items: cartItems.map(item => ({ id: item.id })),
+        }),
+      });
+      const paymentData = await res.json();
+      if (!res.ok || !paymentData.authorization_url) {
+        throw new Error(paymentData.message || 'Unable to start Paystack payment.');
       }
 
-      if (!orderData) {
-        throw new Error('Order was created but no data was returned.');
-      }
-
-      setOrderId(orderData.id);
-
-      // Attempt M-Pesa STK push if configured
-      try {
-        const res = await fetch('/api/mpesa/pay', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: form.phone,
-            amount: subtotal,
-            orderId: orderData.id,
-          }),
-        });
-        const mpesaData = await res.json();
-        if (!mpesaData.success) {
-          console.warn('STK push did not succeed:', mpesaData.message);
-          // Order is still recorded — success screen shown anyway
-        }
-      } catch (mpesaErr) {
-        console.warn('M-Pesa API not configured or failed:', mpesaErr);
-        // Non-fatal: order is saved, show success
-      }
-
-      clearCart();
-      setOrderSuccess(true);
+      window.location.assign(paymentData.authorization_url);
     } catch (err: any) {
       console.error('Checkout Error:', err);
       alert('Something went wrong: ' + (err.message || 'Unknown error'));
@@ -252,7 +226,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                    Phone Number (M-Pesa) *
+                      Phone Number *
                   </label>
                   <input
                     required
@@ -263,7 +237,7 @@ export default function CheckoutPage() {
                     className="w-full bg-transparent border-b-2 border-stone-200 py-3 text-stone-900 placeholder-stone-300 outline-none focus:border-stone-900 transition-colors font-bold tracking-widest text-lg"
                   />
                   <p className="text-[10px] text-stone-400 italic">
-                    You'll receive an M-Pesa STK push on this number to complete payment.
+                    You will complete payment securely on Paystack using the payment methods available for your account.
                   </p>
                 </div>
               </div>
@@ -327,7 +301,7 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    Place Order
+                    Continue to Secure Payment
                     <span className="opacity-50 w-4 h-px bg-white" />
                     KES {subtotal.toLocaleString()}
                   </>
