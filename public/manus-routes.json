@@ -1,0 +1,26 @@
+{
+  "routes": [
+    { "path": "/", "title": "Home" },
+    { "path": "/about", "title": "About" },
+    { "path": "/admin", "title": "Admin" },
+    { "path": "/auth", "title": "Authentication" },
+    { "path": "/blog", "title": "Blog" },
+    { "path": "/blog/:id", "title": "Blog Post" },
+    { "path": "/checkout", "title": "Checkout" },
+    { "path": "/contact", "title": "Contact" },
+    { "path": "/crossbody-bags-kenya", "title": "Crossbody Bags Kenya" },
+    { "path": "/dashboard", "title": "Dashboard" },
+    { "path": "/genuine-leather-bags-kenya", "title": "Genuine Leather Bags Kenya" },
+    { "path": "/knowledge-hub", "title": "Knowledge Hub" },
+    { "path": "/knowledge-hub/:slug", "title": "Knowledge Hub Article" },
+    { "path": "/leather-bags-nairobi", "title": "Leather Bags Nairobi" },
+    { "path": "/luxury-handbags-kenya", "title": "Luxury Handbags Kenya" },
+    { "path": "/payment/callback", "title": "Payment Callback" },
+    { "path": "/product/:id", "title": "Product" },
+    { "path": "/reviews", "title": "Reviews" },
+    { "path": "/shop", "title": "Shop" },
+    { "path": "/shop/:category", "title": "Shop Category" },
+    { "path": "/tote-bags-nairobi", "title": "Tote Bags Nairobi" },
+    { "path": "/womens-handbags-kenya", "title": "Women's Handbags Kenya" }
+  ]
+}

@@ -25,6 +25,9 @@ dist-ssr
 
 .vercel
 .env*.local
+.env
+.env.*
+!.env.example
 .next/
 out/
 build/

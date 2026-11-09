@@ -54,7 +54,7 @@ export default function CheckoutPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/paystack/initialize', {
+      const res = await fetch('/api/payments/paystack/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
